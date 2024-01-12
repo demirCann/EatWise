@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">RelaySample</string>
+    <string name="eatwise_logo">Eatwise Logo</string>
+    <string name="web_client_id">563764091341-t9a05eghkq37ctf3hv309imodi7um0m0.apps.googleusercontent.com</string>
+    <string name="login_image">Login Image</string>
+    <string name="topappbar_profile_image">TopAppBar Profile Image</string>
+    <string name="person_image">Person Image</string>
+    <string name="backarrowbutton">BackArrowButton</string>
+    <string name="settingsbutton">SettingsButton</string>
+    <string name="food_image">Food Image</string>
+    <string name="food_card_favorite_button">Food Card Favorite Button</string>
+    <string name="search_button">Search Button</string>
+    <string name="back_arrow">Back Arrow</string>
+    <string name="lose_weight">Lose weight</string>
+    <string name="maintain_weight">Maintain weight</string>
+    <string name="gain_weight">Gain weight</string>
+    <string name="what_goal_do_you_have_in_mind">What goal do you have in mind?</string>
+    <string name="select_one">Select one.</string>
+    <string name="gender">What sex should we use to calculate your recommendations?</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="date_of_birth">What is your date of birth?</string>
+    <string name="select_date">Select date</string>
+    <string name="height">What\'s your height?</string>
+    <string name="weight">What\'s your weight?</string>
+    <string name="close_button">Close Button</string>
+    <string name="previous">Previous</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="question_count">of %d</string>
+    <string name="age">What\'s your age?</string>
+    <string name="breakfast">Breakfast</string>
+    <string name="dinner">Dinner</string>
+    <string name="lunch">Lunch</string>
+    <string name="snacks">Snacks</string>
+    <string name="add_meal_row">Add Meal Row</string>
+</resources>
