@@ -10,8 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val simpleDateFormatPattern = "EEE, MMM d"
-
 
 class SurveyViewModel(): ViewModel() {
 
@@ -21,7 +19,8 @@ class SurveyViewModel(): ViewModel() {
         SurveyQuestion.GENDER,
         SurveyQuestion.AGE,
         SurveyQuestion.WEIGHT,
-        SurveyQuestion.HEIGHT
+        SurveyQuestion.HEIGHT,
+        SurveyQuestion.EXERCISE,
     )
 
     private var questionIndex = 0
@@ -47,6 +46,10 @@ class SurveyViewModel(): ViewModel() {
     private val _heightResponse = mutableStateOf("")
     val heightResponse: String
         get() = _heightResponse.value
+
+    private val _exerciseResponse = mutableStateOf("")
+    val exerciseResponse: String
+        get() = _exerciseResponse.value
 
 
     // ----- Survey status exposed as State -----
@@ -113,6 +116,11 @@ class SurveyViewModel(): ViewModel() {
         _isNextEnabled.value = getIsNextEnabled()
     }
 
+    fun onExerciseResponse(exercise: String) {
+        _exerciseResponse.value = exercise
+        _isNextEnabled.value = getIsNextEnabled()
+    }
+
 
 
 
@@ -120,9 +128,10 @@ class SurveyViewModel(): ViewModel() {
         return when(questionOrder[questionIndex]) {
             SurveyQuestion.GOAL -> _goalResponse.value != null
             SurveyQuestion.GENDER -> _genderResponse.value != null
-            SurveyQuestion.AGE -> _ageResponse.value != null
-            SurveyQuestion.WEIGHT -> _weightResponse.value != null
-            SurveyQuestion.HEIGHT -> _heightResponse.value != null
+            SurveyQuestion.AGE -> _ageResponse.value != ""
+            SurveyQuestion.WEIGHT -> _weightResponse.value != ""
+            SurveyQuestion.HEIGHT -> _heightResponse.value != ""
+            SurveyQuestion.EXERCISE -> _exerciseResponse.value != ""
         }
     }
 
@@ -164,6 +173,7 @@ enum class SurveyQuestion {
     AGE,
     WEIGHT,
     HEIGHT,
+    EXERCISE,
 }
 
 data class SurveyScreenData(

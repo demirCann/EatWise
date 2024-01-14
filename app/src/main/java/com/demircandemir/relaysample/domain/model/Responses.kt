@@ -13,7 +13,9 @@ data class UserResponse(
 data class MealsResponse(
     val success: Boolean,
     val message: String? = null,
-    val meals: List<MealInfo>
+    val prevPage: Int? = null,
+    val nextPage: Int? = null,
+    val meals: List<MealInfo> = emptyList()
 )
 
 @Serializable

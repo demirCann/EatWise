@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.ui.theme.stronglyDeemphasizedAlpha
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun SurveyQuestionsScreen(
     surveyScreenData: SurveyScreenData,

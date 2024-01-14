@@ -3,7 +3,6 @@ package com.demircandemir.relaysample.presentation.screens.survey
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.demircandemir.relaysample.R
-import com.demircandemir.relaysample.presentation.screens.survey.question.AgeQuestion
 import com.demircandemir.relaysample.presentation.screens.survey.question.ChoiceItem
 import com.demircandemir.relaysample.presentation.screens.survey.question.FillQuestion
 import com.demircandemir.relaysample.presentation.screens.survey.question.SingleChoiceQuestion
@@ -59,6 +58,7 @@ fun BirthDayQuestion(
         text = text,
         unit = UnitClass.YEARS,
         onTextChange = onTextChange,
+        modifier = modifier
     )
 }
 
@@ -92,4 +92,18 @@ fun WeightQuestion(
     )
 }
 
+@Composable
+fun ExerciseQuestion(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FillQuestion(
+        titleResourceId = R.string.exercise_day,
+        text = text,
+        unit = UnitClass.DAY,
+        onTextChange = onTextChange,
+        modifier = modifier
+    )
+}
 

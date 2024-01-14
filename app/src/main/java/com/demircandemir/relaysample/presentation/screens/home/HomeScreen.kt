@@ -5,11 +5,15 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -21,7 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.demircandemir.relaysample.navigation.Screens
 import com.demircandemir.relaysample.navigation.bottomBarNavigation.BottomBarScreenItem
 
@@ -50,9 +56,6 @@ fun HomeScreen(
                 }
             )
         },
-        bottomBar = {
-            BottomBar(navController = navController, bottomBarState = bottomBarState)
-        },
         content = { paddingValues ->
             HomeContent(
                 modifier = Modifier
@@ -78,48 +81,44 @@ fun BottomBar(
 
     AnimatedVisibility(
         visible = bottomBarState.value,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it }),
-        content = {
+    ) {
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.surface
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState() // Shows top element of the back stack and it will recompose if the navController.navigate or navController.popBackStack is called
+            val currentRoute = navBackStackEntry?.destination?.route
 
-            var selectedItemIndex by rememberSaveable {
-                mutableStateOf(0)
-            }
-
-            NavigationBar {
-                screens.forEachIndexed { index, item ->
-
-                    NavigationBarItem(
-                        selected = selectedItemIndex == index,
-                        onClick = {
-                            Log.d("HomeScreen", "itemName: ${item.title}")
-
-                            selectedItemIndex = index
-                            navController.navigate(item.route) {
-                                navController.graph.startDestinationRoute?.let { route ->
-                                    popUpTo(route) {
-                                        saveState = true
-                                    }
+            screens.forEach { screen ->
+                NavigationBarItem(
+                    icon = {
+                        Icon(
+                            imageVector = if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon,
+                            contentDescription = screen.title
+                        )
+                    },
+                    label = { Text(text = screen.title) },
+                    selected = currentRoute == screen.route,
+                    onClick = {
+                        navController.navigate(screen.route) {
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        },
-                        label = {
-                            Text(text = item.title)
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (index == selectedItemIndex) {
-                                    item.selectedIcon
-                                } else item.unselectedIcon,
-                                contentDescription = item.title
-                            )
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                    )
-                }
+                    }
+                )
             }
         }
-    )
+    }
 }
+
+
+
+
+
+
+
 

@@ -67,6 +67,7 @@ dependencies {
     implementation("androidx.datastore:datastore-core:1.0.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.room:room-common:2.6.1")
     //implementation("com.google.firebase:firebase-auth:22.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -85,8 +86,16 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
+
+    // Room components
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.room:room-paging:2.6.1")
+
     // Paging 3.0
-    implementation ("androidx.paging:paging-compose:1.0.0-alpha14")
+    implementation ("androidx.paging:paging-compose:3.2.1")
 
     // KotlinX Serialization
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
@@ -126,7 +135,7 @@ dependencies {
     // System UI Controller - Accompanist
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.21.2-beta")
 
-
+    // Chart
     implementation("com.himanshoe:charty:2.0.0-alpha01")
 
 

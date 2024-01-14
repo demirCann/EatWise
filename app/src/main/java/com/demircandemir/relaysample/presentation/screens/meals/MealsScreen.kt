@@ -37,9 +37,6 @@ fun MealsScreen(
                 onSearchClicked = { navController.navigate(Screens.Search.route) },
                 onBackClicked = {}
             )
-        },
-        bottomBar = {
-            BottomBar(navController = navController, bottomBarState = bottomBarState)
         }
     ) {
 

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.navigation.Screens
@@ -38,7 +39,6 @@ import com.demircandemir.relaysample.navigation.Screens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodCard(
-    meal: MealInfo,
     navController: NavHostController
 ) {
 
@@ -69,7 +69,7 @@ fun FoodCard(
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp)
                 ) {
                     Text(
-                        text = meal.name,
+                        text = "meal",
                         modifier = Modifier
                             .padding(top = 8.dp),
                         fontWeight = FontWeight.Bold,
@@ -87,7 +87,7 @@ fun FoodCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = meal.calorie,
+                            text = "550 kcal",
                             fontWeight = FontWeight.Thin,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -109,8 +109,8 @@ fun FoodCard(
     }
 }
 
-/*@Preview
+@Preview
 @Composable
 fun FoodCardPreview() {
-    FoodCard()
-}*/
+    FoodCard(rememberNavController())
+}

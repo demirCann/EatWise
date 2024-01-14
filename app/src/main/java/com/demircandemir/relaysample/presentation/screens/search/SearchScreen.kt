@@ -32,7 +32,7 @@ fun SearchScreen(
             )
         },
         content = {
-            ListContent(meals = searchedMeals ,navController = navController)
+            ListContent(navController = navController)
         }
     )
 }

@@ -64,4 +64,9 @@ val md_theme_dark_outlineVariant = Color(0xFF43483E)
 val md_theme_dark_scrim = Color(0xFF000000)
 
 
+val ShimmerLightGray = Color(0xFFF1F1F1)
+val ShimmerMediumGray = Color(0xFFE3E3E3)
+val ShimmerDarkGray = Color(0xFF1D1D1D)
+
+
 val seed = Color(0xFF25530B)

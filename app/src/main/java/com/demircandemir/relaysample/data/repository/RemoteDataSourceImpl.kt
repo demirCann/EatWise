@@ -1,6 +1,9 @@
 package com.demircandemir.relaysample.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.demircandemir.relaysample.data.paging_source.SearchMealsSource
 import com.demircandemir.relaysample.data.remote.EatWiseApi
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.domain.model.UserInfo
@@ -27,7 +30,12 @@ class RemoteDataSourceImpl(
     }
 
     override fun searchMeals(name: String): Flow<PagingData<MealInfo>> {
-        TODO("Not yet implemented")
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                SearchMealsSource(eatWiseApi, name)
+            }
+        ).flow
     }
 
 

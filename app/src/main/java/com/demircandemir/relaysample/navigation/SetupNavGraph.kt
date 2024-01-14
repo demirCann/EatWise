@@ -54,7 +54,7 @@ fun SetupNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route
+        startDestination = Screens.Survey.route
     ) {
         composable(Screens.Splash.route) {
             SplashScreen(navController = navController)
@@ -123,7 +123,9 @@ fun SetupNavGraph(
         composable(Screens.Survey.route) {
             SurveyRoute(
                 onSurveyComplete = {
+                    navController.popBackStack()
                     navController.navigate(Screens.Home.route)
+
                 },
                 onNavUp = navController::navigateUp,
             )

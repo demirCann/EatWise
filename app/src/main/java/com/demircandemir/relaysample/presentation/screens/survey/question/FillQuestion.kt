@@ -29,12 +29,14 @@ fun FillQuestion(
         titleResourceId = titleResourceId,
         modifier = modifier,
     ) {
+
         TextFieldRow(
             text = text,
             unit = unit,
             onTextChange = onTextChange,
             modifier = modifier
-        )
+            )
+
     }
 
 }
@@ -75,7 +77,7 @@ fun TextFieldRow(
 }
 
 enum class UnitClass {
-    CM, KG, YEARS
+    CM, KG, YEARS, DAY
 }
 
 

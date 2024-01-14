@@ -5,10 +5,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-                when (navBackStackEntry?.destination?.route) {
+                when (navBackStackEntry?.destination?.route) { // Current route
                     Screens.Home.route, Screens.Recipe.route, Screens.Progress.route -> {
                         bottomBarState.value = true
                     }
@@ -50,11 +52,11 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    /*bottomBar = {
+                    bottomBar = {
                         BottomBar(navController = navController, bottomBarState = bottomBarState)
                     }
 
-                     */
+
                 ) {
                     SetupNavGraph(scope = lifecycleScope, navController = navController)
                 }

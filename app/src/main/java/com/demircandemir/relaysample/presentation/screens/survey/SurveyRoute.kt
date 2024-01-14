@@ -1,15 +1,12 @@
 package com.demircandemir.relaysample.presentation.screens.survey
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -38,8 +35,7 @@ fun SurveyRoute(
         onPreviousPressed = { viewModel.onPreviousPressed() },
         onNextPressed = { viewModel.onNextPressed() },
         onDonePressed = { viewModel.onDonePressed(onSurveyComplete) }
-    ) { paddingValues ->
-        val modifier = Modifier.padding(paddingValues)
+    ) {
 
         AnimatedContent(
             targetState = surveyScreenData,
@@ -70,26 +66,33 @@ fun SurveyRoute(
                 }
 
                 SurveyQuestion.AGE -> {
-                    Log.d("SurveyRoute", "Age")
-                    BirthDayQuestion(text = viewModel.ageResponse, onTextChange = viewModel::onAgeResponse)
+                    BirthDayQuestion(
+                            text = viewModel.ageResponse,
+                            onTextChange = viewModel::onAgeResponse
+                        )
+
                 }
 
                 SurveyQuestion.WEIGHT -> {
-                    viewModel.weightResponse?.let {
-                        WeightQuestion(
-                            text = it,
-                            onTextChange = viewModel::onWeightResponse
-                        )
-                    }
+                    WeightQuestion(
+                        text = viewModel.weightResponse,
+                        onTextChange = viewModel::onWeightResponse
+                    )
                 }
 
                 SurveyQuestion.HEIGHT -> {
-                    viewModel.heightResponse?.let {
-                        HeightQuestion(
-                            text = it,
-                            onTextChange = viewModel::onHeightResponse
-                        )
-                    }
+                    HeightQuestion(
+                        text = viewModel.heightResponse,
+                        onTextChange = viewModel::onHeightResponse
+                    )
+                }
+
+                SurveyQuestion.EXERCISE -> {
+                    ExerciseQuestion(
+                        text = viewModel.exerciseResponse,
+                        onTextChange = viewModel::onExerciseResponse
+                    )
+
                 }
 
             }
