@@ -1,5 +1,6 @@
 package com.demircandemir.relaysample.di
 
+import com.demircandemir.relaysample.data.local.EatWiseDatabase
 import com.demircandemir.relaysample.data.remote.EatWiseApi
 import com.demircandemir.relaysample.data.repository.RemoteDataSourceImpl
 import com.demircandemir.relaysample.domain.repositories.RemoteDataSource
@@ -54,10 +55,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRemoteDataSource(
-        eatWiseApi: EatWiseApi
+        eatWiseApi: EatWiseApi,
+        eatWiseDatabase: EatWiseDatabase
     ): RemoteDataSource {
         return RemoteDataSourceImpl(
-            eatWiseApi = eatWiseApi
+            eatWiseApi = eatWiseApi,
+            eatWiseDatabase = eatWiseDatabase
         )
     }
 

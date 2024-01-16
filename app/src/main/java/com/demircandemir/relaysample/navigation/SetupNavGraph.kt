@@ -15,8 +15,10 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.demircandemir.relaysample.presentation.screens.details.DetailScreen
 import com.demircandemir.relaysample.presentation.screens.home.HomeScreen
 import com.demircandemir.relaysample.presentation.screens.login.GoogleAuthUiClient
@@ -30,9 +32,11 @@ import com.demircandemir.relaysample.presentation.screens.meals.dinner_meals.Din
 import com.demircandemir.relaysample.presentation.screens.meals.lunch_meals.LunchMealsScreen
 import com.demircandemir.relaysample.presentation.screens.meals.snacks_meals.SnacksMealsScreen
 import com.demircandemir.relaysample.presentation.screens.search.SearchScreen
+import com.demircandemir.relaysample.presentation.screens.selection.FoodSelectionScreen
 import com.demircandemir.relaysample.presentation.screens.settings.SettingsScreen
 import com.demircandemir.relaysample.presentation.screens.splash.SplashScreen
 import com.demircandemir.relaysample.presentation.screens.survey.SurveyRoute
+import com.demircandemir.relaysample.util.Constants.MEAL_ID_ARGUMENT_KEY
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -54,7 +58,7 @@ fun SetupNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screens.Survey.route
+        startDestination = Screens.Home.route
     ) {
         composable(Screens.Splash.route) {
             SplashScreen(navController = navController)
@@ -131,7 +135,12 @@ fun SetupNavGraph(
             )
         }
 
-        composable(Screens.Home.route) {
+        composable(
+            route = Screens.Home.route,
+            arguments = listOf(navArgument(MEAL_ID_ARGUMENT_KEY,) {
+                type = NavType.IntType
+            })
+        ) {
             HomeScreen(
                 navController = navController
             )
@@ -175,6 +184,10 @@ fun SetupNavGraph(
 
         composable(Screens.Search.route) {
             SearchScreen(navController = navController)
+        }
+
+        composable(Screens.FoodSelection.route) {
+            FoodSelectionScreen(navController = navController)
         }
     }
 }

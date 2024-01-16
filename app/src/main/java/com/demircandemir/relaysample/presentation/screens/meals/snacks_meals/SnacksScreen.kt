@@ -20,9 +20,7 @@ fun SnacksMealsScreen(
         topBar = {
             MealsTopBar(
                 topBarName = stringResource(R.string.snacks),
-                onSearchClicked = {
-                    navController.navigate(Screens.Search.route)
-                },
+                onSearchClicked = {},
                 onBackClicked = {
                     navController.popBackStack()
                 }

@@ -19,12 +19,21 @@ interface EatWiseApi {
         @Query("id") id: String
     )
 
-    @GET("/meals")
-    suspend fun getAllMeals(): MealsResponse
+    @GET("/meals/page/")
+    suspend fun getAllMeals(
+        @Query("page") page: Int = 1
+    ): MealsResponse
+
+
+    @GET("/meals/repast/")
+    suspend fun getMealsForSelection(
+        @Query("repast") repast: String = "Breakfast",
+        @Query("page") page: Int = 1
+    ): MealsResponse
 
     @GET("/meals/")
-    suspend fun getSelectedMeals(
-        @Query("meal_id") id: String
+    suspend fun getSelectedMeal(
+        @Query("meal_id") id: Int
     ): MealResponse
 
     @GET("/meals/search")

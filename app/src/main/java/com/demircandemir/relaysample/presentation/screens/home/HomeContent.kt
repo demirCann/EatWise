@@ -36,7 +36,9 @@ fun HomeContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            MealAddRows(navController = navController)
+            MealAddRows(
+                navController = navController
+            )
         }
 
 

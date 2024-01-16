@@ -1,8 +1,10 @@
 package com.demircandemir.relaysample.presentation.common
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -14,18 +16,20 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.presentation.components.FoodCard
+import com.demircandemir.relaysample.presentation.components.SelectableFoodCard
 import com.demircandemir.relaysample.presentation.components.ShimmerEffect
 
 @Composable
 fun ListContent(
-    //meals: LazyPagingItems<MealInfo>,
+    meals: LazyPagingItems<MealInfo>,
+   // onAddedClicked: (Int) -> Unit,
+    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
     /*
     val result = handlePagingResult(
         meals = meals
     )
-
     if (result) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(140.dp),
@@ -44,25 +48,35 @@ fun ListContent(
                 )
             }
         }
-
-
     }
-
-
      */
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(140.dp),
-        modifier = Modifier
-            .fillMaxHeight(),
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(6) {
-            FoodCard(navController)
+    val result = handlePagingResult(meals = meals)
+
+    if (result) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(140.dp),
+            modifier = modifier
+                .fillMaxHeight(),
+            contentPadding = PaddingValues(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(count = meals.itemCount) {
+                meals[it]?.let { it1 ->
+                    SelectableFoodCard(
+                        meal = it1,
+                        onAddedClicked = { mealId ->
+                            //onAddedClicked(mealId)
+                        },
+                        navController = navController
+                    )
+                }
+            }
         }
     }
+
+
 }
 
 

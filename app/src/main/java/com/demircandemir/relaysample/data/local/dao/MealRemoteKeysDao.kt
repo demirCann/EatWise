@@ -12,7 +12,7 @@ interface MealRemoteKeysDao {
     suspend fun getRemoteKeys(id: Int): MealRemoteKeys?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addAllRemoteKeys(heroRemoteKeys: List<MealRemoteKeys>)
+    suspend fun addAllRemoteKeys(mealRemoteKeys: List<MealRemoteKeys>)
 
     @Query("DELETE FROM meal_remote_keys_table")
     suspend fun deleteAllRemoteKeys()

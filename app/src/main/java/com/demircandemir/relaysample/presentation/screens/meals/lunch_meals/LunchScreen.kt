@@ -21,9 +21,7 @@ fun LunchMealsScreen(
         topBar = {
             MealsTopBar(
                 topBarName = stringResource(R.string.lunch),
-                onSearchClicked = {
-                    navController.navigate(Screens.Search.route)
-                },
+                onSearchClicked = {},
                 onBackClicked = {
                     navController.popBackStack()
                 }

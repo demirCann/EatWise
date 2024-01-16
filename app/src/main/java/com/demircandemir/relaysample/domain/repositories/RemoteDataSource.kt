@@ -13,6 +13,8 @@ interface RemoteDataSource {
 
     fun getAllMeals(): Flow<PagingData<MealInfo>>
 
+    fun getMealsForSelection(repast: String): Flow<PagingData<MealInfo>>
+
     fun getSelectedMeals(id: String): MealInfo
 
     fun searchMeals(name: String): Flow<PagingData<MealInfo>>

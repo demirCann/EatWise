@@ -103,6 +103,7 @@ fun parseErrorMessage(error: LoadState.Error): String {
     return when (error.error) {
         is SocketTimeoutException -> "Server Unavailable."
         is ConnectException -> "Internet Unavailable"
+        is Exception -> error.error.message.toString()
         else -> "Something went wrong"
     }
 }

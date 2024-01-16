@@ -11,42 +11,55 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.navigation.Screens
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FoodCard(
+fun SelectableFoodCard(
+    meal: MealInfo,
+    onAddedClicked: (Int) -> Unit,
     navController: NavHostController
 ) {
 
+    var selected by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(key1 = selected) {
+        if (selected) {
+            navController.navigate(Screens.Home.passMealId(meal.id))
+        }
+    }
+
     Card(
         onClick = {
-            navController.navigate(Screens.Detail.route)
+            navController.navigate(Screens.Detail.passMealInfo(meal))
         },
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
@@ -71,7 +84,7 @@ fun FoodCard(
                         .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp)
                 ) {
                     Text(
-                        text = "meal",
+                        text = meal.name,
                         modifier = Modifier
                             .padding(top = 8.dp),
                         fontWeight = FontWeight.Bold,
@@ -89,18 +102,36 @@ fun FoodCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "550 kcal",
+                            text = meal.calorie,
                             fontWeight = FontWeight.Thin,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodyMedium
                         )
 
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
+                        IconButton(
+                            onClick = {
+                                //onAddedClicked(meal.id)
+                                      selected = !selected
+                            },
+                            modifier = Modifier
+                                .selectable(
+                                    selected = selected,
+                                    onClick = {}
+                                )
+                        ) {
+
+                            if (selected) {
+                                Icon(
+                                imageVector = Icons.Filled.CheckCircle,
                                 contentDescription = stringResource(R.string.food_card_favorite_button)
-                            )
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Filled.AddCircle,
+                                    contentDescription = stringResource(R.string.food_card_favorite_button)
+                                )
+                            }
                         }
 
                     }
@@ -109,10 +140,4 @@ fun FoodCard(
 
         }
     }
-}
-
-@Preview
-@Composable
-fun FoodCardPreview() {
-    FoodCard(rememberNavController())
 }

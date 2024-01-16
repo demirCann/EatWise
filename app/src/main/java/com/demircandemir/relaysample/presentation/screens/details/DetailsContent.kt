@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.demircandemir.relaysample.R
+import com.demircandemir.relaysample.domain.model.MealInfo
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -55,6 +56,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailsContent(
+    meal: MealInfo,
     onFinishedClicked : () -> Unit
 ) {
 
@@ -69,6 +71,7 @@ fun DetailsContent(
         sheetPeekHeight = 240.dp,
         sheetContent = {
             LineIndicatorExample(
+                meal = meal,
                 onFinishedClicked = {
                     onFinishedClicked()
                 }
@@ -89,6 +92,7 @@ fun DetailsContent(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun LineIndicatorExample(
+    meal: MealInfo,
     onFinishedClicked : () -> Unit
 ) {
     Column(modifier  = Modifier.heightIn(min = 100.dp, max = 500.dp)){
@@ -104,6 +108,7 @@ fun LineIndicatorExample(
             state = pagerState)
         {
             PagerSampleItem(
+                meal = meal,
                 pageNumber = pageCount,
                 pagerState = pagerState,
                 onFinishedClicked = {
@@ -163,6 +168,7 @@ fun LineIndicatorExamplePreview() {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun PagerSampleItem(
+    meal: MealInfo,
     pageNumber: Int,
     pagerState: androidx.compose.foundation.pager.PagerState,
     onFinishedClicked : () -> Unit
@@ -173,7 +179,11 @@ fun PagerSampleItem(
 
 
     if (pagerState.currentPage == 0) {
-        StartPage(pagerState = pagerState)
+        StartPage(
+            meal = meal,
+            pagerState = pagerState
+        )
+
     } else {
         StepPage(
             pageNumber = pageNumber,
@@ -193,6 +203,7 @@ fun PagerSampleItem(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StartPage(
+    meal: MealInfo,
     pagerState: androidx.compose.foundation.pager.PagerState
 ) {
 
@@ -206,7 +217,7 @@ fun StartPage(
         ) {
 
         Text(
-            text = "Ramen",
+            text = meal.name,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.headlineLarge,
             )
@@ -233,7 +244,7 @@ fun StartPage(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                    text = "1000 kcal",
+                    text = meal.calorie,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                     Text(
@@ -246,7 +257,7 @@ fun StartPage(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "15 g",
+                        text = "${meal.protein} g",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
@@ -258,7 +269,7 @@ fun StartPage(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "58 g",
+                        text = "${meal.carbohydrate} g",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
@@ -270,7 +281,7 @@ fun StartPage(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "20 g",
+                        text = "${meal.fat} g",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(

@@ -14,8 +14,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.demircandemir.relaysample.navigation.Screens
 import com.demircandemir.relaysample.presentation.common.ListContent
 import com.demircandemir.relaysample.presentation.screens.home.BottomBar
@@ -23,8 +25,11 @@ import com.demircandemir.relaysample.presentation.screens.home.BottomBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MealsScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    mealsViewModel: MealsViewModel = hiltViewModel()
 ) {
+
+    val allMeals = mealsViewModel.allMeals.collectAsLazyPagingItems()
 
     val bottomBarState = rememberSaveable {
         mutableStateOf(true)
@@ -56,7 +61,10 @@ fun MealsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ListContent(navController = navController)
+            ListContent(
+                meals = allMeals,
+                navController = navController
+            )
         }
 
 

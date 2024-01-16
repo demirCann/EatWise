@@ -15,7 +15,8 @@ data class MealsResponse(
     val message: String? = null,
     val prevPage: Int? = null,
     val nextPage: Int? = null,
-    val meals: List<MealInfo> = emptyList()
+    val meals: List<MealInfo> = emptyList(),
+    val lastUpdated: Long? = null
 )
 
 @Serializable

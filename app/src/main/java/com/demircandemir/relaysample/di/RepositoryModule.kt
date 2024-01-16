@@ -6,6 +6,7 @@ import com.demircandemir.relaysample.data.repository.Repository
 import com.demircandemir.relaysample.domain.repositories.DataStoreOperations
 import com.demircandemir.relaysample.domain.use_cases.UseCases
 import com.demircandemir.relaysample.domain.use_cases.get_all_meals.GetAllMealsUseCase
+import com.demircandemir.relaysample.domain.use_cases.get_meals_for_selection.GetMealForSelectionUseCase
 import com.demircandemir.relaysample.domain.use_cases.get_selected_meal.GetSelectedMealUseCase
 import com.demircandemir.relaysample.domain.use_cases.get_user_info.GetUserInfoUseCase
 import com.demircandemir.relaysample.domain.use_cases.post_user_info.PostUserInfoUseCase
@@ -40,6 +41,7 @@ object RepositoryModule {
     ): UseCases {
         return UseCases(
             getAllMealsUseCase = GetAllMealsUseCase(repository = repository),
+            getMealForSelectionUseCase = GetMealForSelectionUseCase(repository = repository),
             getSelectedMealUseCase = GetSelectedMealUseCase(repository = repository),
             getUserInfoUseCase = GetUserInfoUseCase(repository = repository),
             postUserInfoUseCase = PostUserInfoUseCase(repository = repository),

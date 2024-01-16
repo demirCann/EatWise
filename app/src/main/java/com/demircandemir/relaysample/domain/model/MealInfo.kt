@@ -1,6 +1,6 @@
 package com.demircandemir.relaysample.domain.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.demircandemir.relaysample.util.Constants.MEAL_DATABASE

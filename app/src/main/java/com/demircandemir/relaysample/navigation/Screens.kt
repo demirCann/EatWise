@@ -1,5 +1,7 @@
 package com.demircandemir.relaysample.navigation
 
+import com.demircandemir.relaysample.domain.model.MealInfo
+
 sealed class Screens(val route: String) {
 
     data object Splash : Screens("splash_screen")
@@ -8,7 +10,11 @@ sealed class Screens(val route: String) {
 
     data object Survey: Screens("survey_screen")
 
-    data object Home : Screens("home_screen")
+    data object Home : Screens("home_screen/{mealId}") {
+        fun passMealId(mealId: Int): String {
+            return "home_screen/$mealId"
+        }
+    }
 
     data object Recipe : Screens("recipe_screen")
 
@@ -18,7 +24,11 @@ sealed class Screens(val route: String) {
 
     data object Settings : Screens("settings_screen")
 
-    data object Detail : Screens("detail_screen")
+    data object Detail : Screens("detail_screen/{mealInfo}") {
+        fun passMealInfo(mealInfo: MealInfo): String {
+            return "detail_screen/$mealInfo"
+        }
+    }
 
     data object BreakfastMeals : Screens("breakfast_meals_screen")
 
@@ -29,6 +39,12 @@ sealed class Screens(val route: String) {
     data object SnacksMeals : Screens("snacks_meals_screen")
 
     data object Search : Screens("search_screen")
+
+    data object FoodSelection : Screens("food_selection_screen/{repast}") {
+        fun passRepast(repast: String): String {
+            return "food_selection_screen/$repast"
+        }
+    }
 
 
 

@@ -6,7 +6,7 @@ import com.demircandemir.relaysample.domain.model.MealInfo
 class GetSelectedMealUseCase (
     private val repository: Repository
 ){
-    operator fun invoke(id: String): MealInfo {
+    suspend operator fun invoke(id: Int): MealInfo {
         return repository.getSelectedMeals(id = id)
     }
 }

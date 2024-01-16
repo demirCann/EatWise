@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.demircandemir.relaysample.R
+import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.navigation.Screens
 
 
@@ -77,8 +78,7 @@ fun MealAddRows(
             MealAddRowItem(
                 mealAddRow = meal
             ) {
-                navController.navigate(meal.route)
-                navController.popBackStack()
+                navController.navigate(Screens.FoodSelection.passRepast(meal.name))
             }
         }
     }
@@ -165,9 +165,11 @@ data class MealAddRow(
 @Preview()
 @Composable
 fun MealAddRowsPreview() {
-    MealAddRows(
+    /*MealAddRows(
         navController = rememberNavController()
     )
+
+     */
 }
 
 
