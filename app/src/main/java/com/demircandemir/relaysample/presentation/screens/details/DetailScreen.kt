@@ -1,6 +1,8 @@
 package com.demircandemir.relaysample.presentation.screens.details
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 
@@ -10,13 +12,15 @@ fun DetailScreen(
     detailsViewModel: DetailsViewModel = hiltViewModel()
 ) {
 
-    val meal = detailsViewModel.mealInfo
+    val selectedMeal by detailsViewModel.selectedMeal.collectAsState()
 
 
-    DetailsContent(
-        meal = meal!!,
+    selectedMeal?.let {
+        DetailsContent(
+        meal = it,
         onFinishedClicked = {
             navController.popBackStack()
         }
     )
+    }
 }

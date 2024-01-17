@@ -34,8 +34,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.navigation.Screens
@@ -59,7 +61,7 @@ fun SelectableFoodCard(
 
     Card(
         onClick = {
-            navController.navigate(Screens.Detail.passMealInfo(meal))
+            navController.navigate(Screens.Detail.passMealInfo(meal.id))
         },
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
@@ -74,14 +76,17 @@ fun SelectableFoodCard(
                 contentDescription = stringResource(R.string.food_image),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(140.dp, 150.dp),
+                    .size(140.dp, 120.dp),
             )
 
-            Box() {
+            Box(
+                contentAlignment = Alignment.BottomStart
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp)
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         text = meal.name,
@@ -90,19 +95,19 @@ fun SelectableFoodCard(
                         fontWeight = FontWeight.Bold,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineSmall
                     )
 
-                    Spacer(modifier = Modifier.padding(15.dp))
 
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = meal.calorie,
+                            text = "${meal.calorie} kcal",
                             fontWeight = FontWeight.Thin,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -115,6 +120,7 @@ fun SelectableFoodCard(
                                       selected = !selected
                             },
                             modifier = Modifier
+                                .size(24.dp)
                                 .selectable(
                                     selected = selected,
                                     onClick = {}
@@ -140,4 +146,24 @@ fun SelectableFoodCard(
 
         }
     }
+}
+
+@Preview
+@Composable
+fun SelectableFoodCardPreview() {
+    SelectableFoodCard(
+        meal = MealInfo(
+            id = 1,
+            name = "a",
+            calorie = "100",
+            image = "image",
+            recipe = listOf(),
+            mealType = "mealType",
+            protein = "protein",
+            fat = "fat",
+            carbohydrate = "carbonhydrate",
+        ),
+        onAddedClicked = {},
+        navController = rememberNavController()
+    )
 }

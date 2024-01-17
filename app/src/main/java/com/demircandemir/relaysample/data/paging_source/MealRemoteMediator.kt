@@ -62,9 +62,7 @@ class MealRemoteMediator @Inject constructor(
                     nextPage
                 }
             }
-
             val response = eatWiseApi.getAllMeals(page = page)
-
             if (response.meals.isNotEmpty()) {
                 eatWiseDatabase.withTransaction {
                     if (loadType == LoadType.REFRESH) {
@@ -85,11 +83,7 @@ class MealRemoteMediator @Inject constructor(
                     mealDao.addMeals(meals = response.meals)
                 }
             }
-
-
             MediatorResult.Success(endOfPaginationReached = response.nextPage == null)
-
-
         } catch (e: Exception) {
             return MediatorResult.Error(e)
         }

@@ -22,9 +22,9 @@ sealed class BottomBarScreenItem(
         unselectedIcon = Icons.Outlined.Home
     )
 
-    object Recipe : BottomBarScreenItem(
+    object Meals : BottomBarScreenItem(
         route = "recipe_screen",
-        title = "Recipes",
+        title = "Meals",
         selectedIcon = Icons.Filled.ShoppingCart,
         unselectedIcon = Icons.Outlined.ShoppingCart
     )

@@ -3,6 +3,7 @@ package com.demircandemir.relaysample.presentation.screens.survey.question
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +35,7 @@ fun FillQuestion(
             text = text,
             unit = unit,
             onTextChange = onTextChange,
-            modifier = modifier
+            modifier = modifier.padding(start = 16.dp,top = 250.dp)
             )
 
     }
@@ -60,7 +61,10 @@ fun TextFieldRow(
             onValueChange = { onTextChange(it) },
             singleLine = true,
             shape = TextFieldDefaults.outlinedShape,
-            colors = TextFieldDefaults.colors(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            ),
         )
         
         Spacer(modifier = modifier.width(8.dp))

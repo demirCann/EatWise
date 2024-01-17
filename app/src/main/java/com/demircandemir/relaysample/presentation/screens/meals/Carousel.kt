@@ -37,22 +37,22 @@ fun Carousel(
         CarouselItemData(
             mealName = "Breakfast",
             mealImage = painterResource(id = R.drawable.breakfast_image),
-            mealRoute = Screens.BreakfastMeals.route
+            mealRoute = Screens.BreakfastMeals.passRepast("Breakfast")
         ),
         CarouselItemData(
             mealName = "Lunch",
             mealImage = painterResource(id = R.drawable.lunch_image),
-            mealRoute = Screens.LunchMeals.route
+            mealRoute = Screens.BreakfastMeals.passRepast("Lunch")
         ),
         CarouselItemData(
             mealName = "Dinner",
             mealImage = painterResource(id = R.drawable.meat_food),
-            mealRoute = Screens.DinnerMeals.route
+            mealRoute = Screens.BreakfastMeals.passRepast("Dinner")
         ),
         CarouselItemData(
             mealName = "Snack",
             mealImage = painterResource(id = R.drawable.snacks_image),
-            mealRoute = Screens.SnacksMeals.route
+            mealRoute = Screens.BreakfastMeals.passRepast("Snack")
         ),
     )
 

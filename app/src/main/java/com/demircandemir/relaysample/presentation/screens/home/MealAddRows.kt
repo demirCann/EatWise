@@ -71,7 +71,7 @@ fun MealAddRows(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 48.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         meals.forEach { meal ->

@@ -28,13 +28,11 @@ fun MealsScreen(
     navController: NavHostController,
     mealsViewModel: MealsViewModel = hiltViewModel()
 ) {
-
     val allMeals = mealsViewModel.allMeals.collectAsLazyPagingItems()
 
     val bottomBarState = rememberSaveable {
         mutableStateOf(true)
     }
-
     Scaffold(
         topBar = {
             MealsTopBar(
@@ -44,9 +42,6 @@ fun MealsScreen(
             )
         }
     ) {
-
-
-
         Column(
             modifier = Modifier
                 .padding(it)
@@ -66,14 +61,7 @@ fun MealsScreen(
                 navController = navController
             )
         }
-
-
-
     }
-
-
-
-
 }
 
 

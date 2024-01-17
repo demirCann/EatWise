@@ -58,7 +58,7 @@ fun SetupNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screens.Home.route
+        startDestination = Screens.Survey.route
     ) {
         composable(Screens.Splash.route) {
             SplashScreen(navController = navController)
@@ -74,7 +74,7 @@ fun SetupNavGraph(
             if (googleAuthUiClient.getSignedInUser() != null) {
                 LaunchedEffect(key1 = Unit) {
                     Log.d("Screens", "Launched Effect launched")
-                    navController.navigate(Screens.Home.route)
+                    navController.navigate(Screens.Survey.route)
                 }
             } else {
                 val launcher = rememberLauncherForActivityResult(
@@ -101,7 +101,7 @@ fun SetupNavGraph(
                         ).show()
 
                         Log.d("Screens", "Success Launched Effect launched")
-                        navController.navigate(Screens.Home.route)
+                        navController.navigate(Screens.Survey.route)
                     }
                 }
 
@@ -139,6 +139,7 @@ fun SetupNavGraph(
             route = Screens.Home.route,
             arguments = listOf(navArgument(MEAL_ID_ARGUMENT_KEY,) {
                 type = NavType.IntType
+                defaultValue = 0
             })
         ) {
             HomeScreen(
@@ -162,7 +163,12 @@ fun SetupNavGraph(
             SettingsScreen(navController = navController)
         }
 
-        composable(Screens.Detail.route) {
+        composable(
+            Screens.Detail.route,
+            arguments = listOf(navArgument(MEAL_ID_ARGUMENT_KEY,) {
+                type = NavType.IntType
+            })
+        ) {
             DetailScreen(navController = navController)
         }
 

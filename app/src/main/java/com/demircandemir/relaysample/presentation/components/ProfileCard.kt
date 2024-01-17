@@ -44,9 +44,9 @@ fun ProfileCard(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         modifier = Modifier
-            .size(width = 380.dp, height = 250.dp)
+            .fillMaxWidth()
             .padding(paddingValues)
-            .padding(start = 16.dp, top = 16.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
 
         Row(
@@ -113,7 +113,29 @@ fun ProfileCard(
                     overflow = TextOverflow.Ellipsis
                 )
             }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, start = 16.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Height",
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
+
+
+            Text(
+                text = "175 cm",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,6 +152,30 @@ fun ProfileCard(
 
             Text(
                 text = "Gain Weight",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, start = 16.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Exercise Day in a Week",
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+
+
+            Text(
+                text = "3",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,

@@ -10,7 +10,7 @@ sealed class Screens(val route: String) {
 
     data object Survey: Screens("survey_screen")
 
-    data object Home : Screens("home_screen/{mealId}") {
+    data object Home : Screens("home_screen") {
         fun passMealId(mealId: Int): String {
             return "home_screen/$mealId"
         }
@@ -24,13 +24,17 @@ sealed class Screens(val route: String) {
 
     data object Settings : Screens("settings_screen")
 
-    data object Detail : Screens("detail_screen/{mealInfo}") {
-        fun passMealInfo(mealInfo: MealInfo): String {
-            return "detail_screen/$mealInfo"
+    data object Detail : Screens("detail_screen/{mealId}") {
+        fun passMealInfo(mealId: Int): String {
+            return "detail_screen/$mealId"
         }
     }
 
-    data object BreakfastMeals : Screens("breakfast_meals_screen")
+    data object BreakfastMeals : Screens("breakfast_meals_screen/{repast}") {
+        fun passRepast(repast: String): String {
+            return "breakfast_meals_screen/$repast"
+        }
+    }
 
     data object LunchMeals : Screens("lunch_meals_screen")
 
