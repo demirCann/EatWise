@@ -8,7 +8,7 @@
 
 <h2>Project Screenshots:</h2>
 
-<img src="https://github.com/demirCann/EatWise/blob/master/images/login_screen.png" alt="project-screenshot" width="250" height="400/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/survey_screen_1.png" alt="project-screenshot" width="250" height="400/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/home_screen.png" alt="project-screenshot" width="250" height="400/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/meals_screen.png" alt="project-screenshot" width="250" height="400/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/details_screen_1.png" alt="project-screenshot" width="250" height="400/">
+<img src="https://github.com/demirCann/EatWise/blob/master/images/login_screen.png" alt="project-screenshot" width="250" height="500/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/survey_screen_1.png" alt="project-screenshot" width="250" height="500/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/home_screen.png" alt="project-screenshot" width="250" height="500/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/meals_screen.png" alt="project-screenshot" width="250" height="500/"> <img src="https://github.com/demirCann/EatWise/blob/master/images/details_screen_1.png" alt="project-screenshot" width="250" height="500/">
 
 
   
