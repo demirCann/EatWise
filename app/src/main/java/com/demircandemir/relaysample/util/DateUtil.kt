@@ -1,13 +1,14 @@
 package com.demircandemir.relaysample.util
 
 import java.util.Calendar
+import java.util.GregorianCalendar
 
 fun getDefaultDateInMillis(): Long {
-    val cal = Calendar.getInstance()
-    val year = cal.get(Calendar.YEAR)
-    val month = cal.get(Calendar.MONTH)
-    val date = cal.get(Calendar.DATE)
+    var cal = Calendar.getInstance()
+    val year = cal[Calendar.YEAR]
+    val month = cal[Calendar.MONTH]
+    val date = cal[Calendar.DATE]
     cal.clear()
-    cal.set(year, month, date)
+    cal = GregorianCalendar(year, month, date)
     return cal.timeInMillis
 }

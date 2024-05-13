@@ -33,7 +33,6 @@ import com.demircandemir.relaysample.presentation.screens.meals.lunch_meals.Lunc
 import com.demircandemir.relaysample.presentation.screens.meals.snacks_meals.SnacksMealsScreen
 import com.demircandemir.relaysample.presentation.screens.search.SearchScreen
 import com.demircandemir.relaysample.presentation.screens.selection.FoodSelectionScreen
-import com.demircandemir.relaysample.presentation.screens.settings.SettingsScreen
 import com.demircandemir.relaysample.presentation.screens.splash.SplashScreen
 import com.demircandemir.relaysample.presentation.screens.survey.SurveyRoute
 import com.demircandemir.relaysample.util.Constants.MEAL_ID_ARGUMENT_KEY
@@ -152,20 +151,18 @@ fun SetupNavGraph(
         }
 
         composable(Screens.Progress.route) {
-            ProgressScreen(navController = navController)
+            ProgressScreen()
         }
 
         composable(Screens.Profile.route) {
             ProfileScreen(navController = navController)
         }
 
-        composable(Screens.Settings.route) {
-            SettingsScreen(navController = navController)
-        }
+        composable(Screens.Settings.route) {}
 
         composable(
             Screens.Detail.route,
-            arguments = listOf(navArgument(MEAL_ID_ARGUMENT_KEY,) {
+            arguments = listOf(navArgument(MEAL_ID_ARGUMENT_KEY) {
                 type = NavType.IntType
             })
         ) {

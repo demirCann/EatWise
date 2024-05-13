@@ -2,13 +2,8 @@ package com.demircandemir.relaysample.presentation.screens.survey
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.demircandemir.relaysample.domain.use_cases.UseCases
 import com.demircandemir.relaysample.presentation.screens.survey.question.ChoiceItem
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+
 
 
 class SurveyViewModel(): ViewModel() {
@@ -71,7 +66,7 @@ class SurveyViewModel(): ViewModel() {
     }
 
     fun onPreviousPressed() {
-        if (questionIndex == 0) {
+        check (questionIndex == 0) {
             throw IllegalStateException("onPreviousPressed when on question 0")
         }
         changeQuestion(questionIndex - 1)
@@ -144,23 +139,6 @@ class SurveyViewModel(): ViewModel() {
             surveyQuestion = questionOrder[questionIndex]
         )
     }
-
-
-
-
-
-
-
-
-    /*fun saveSurvey(completed: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            useCases.saveSurveyUseCase(completed)
-        }
-    }
-
-     */
-
-
 }
 
 

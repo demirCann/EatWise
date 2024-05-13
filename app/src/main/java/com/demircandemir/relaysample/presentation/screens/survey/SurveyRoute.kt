@@ -118,29 +118,3 @@ private fun getTransitionDirection(
     }
 }
 
-/*
-private fun showTakeawayDatePicker(
-    date: Long?,
-    supportFragmentManager: FragmentManager,
-    onDateSelected: (date: Long) -> Unit,
-) {
-    val picker = MaterialDatePicker.Builder.datePicker()
-        .setSelection(date)
-        .build()
-    picker.showNow(supportFragmentManager, picker.toString())
-    picker.addOnPositiveButtonClickListener {
-        picker.selection?.let {
-            onDateSelected(it)
-        }
-    }
-}
-
-private tailrec fun Context.findActivity(): AppCompatActivity =
-    when (this) {
-        is AppCompatActivity -> this
-        is ContextWrapper -> this.baseContext.findActivity()
-        else -> throw IllegalArgumentException("Could not find activity!")
-    }
-
- */
-

@@ -36,4 +36,5 @@
     <string name="add_meal_row">Add Meal Row</string>
     <string name="exercise_day">How many times do you exercise in a week?</string>
     <string name="error_icon">Error Icon</string>
+    <string name="eatwise">EatWise</string>
 </resources>

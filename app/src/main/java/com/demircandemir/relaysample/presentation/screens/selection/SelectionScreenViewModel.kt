@@ -9,6 +9,7 @@ import com.demircandemir.relaysample.domain.use_cases.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class SelectionScreenViewModel @Inject constructor(
 
 
     private val _meals: MutableStateFlow<PagingData<MealInfo>> = MutableStateFlow(PagingData.empty())
-    val meals = _meals
+    val meals = _meals.asStateFlow()
 
     val repast = savedStateHandle.get<String>("repast")
 

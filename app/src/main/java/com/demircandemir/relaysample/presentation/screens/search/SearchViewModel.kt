@@ -10,6 +10,7 @@ import com.demircandemir.relaysample.domain.use_cases.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class SearchViewModel @Inject constructor(
 
 
     private val _searchedMeals = MutableStateFlow<PagingData<MealInfo>>(PagingData.empty())
-    val searchedMeals = _searchedMeals
+    val searchedMeals = _searchedMeals.asStateFlow()
 
 
 

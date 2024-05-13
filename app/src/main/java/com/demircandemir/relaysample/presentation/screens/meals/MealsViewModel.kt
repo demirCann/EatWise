@@ -8,6 +8,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MealsViewModel @Inject constructor(
     useCases: UseCases
-): ViewModel() {
+) : ViewModel() {
     val allMeals = useCases.getAllMealsUseCase()
 }

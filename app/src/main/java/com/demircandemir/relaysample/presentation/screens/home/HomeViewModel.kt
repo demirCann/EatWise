@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.domain.use_cases.UseCases
 import com.demircandemir.relaysample.util.Constants.MEAL_ID_ARGUMENT_KEY
@@ -20,6 +19,9 @@ class HomeViewModel @Inject constructor(
     private val useCases: UseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
+
+
+
 
     private val _selectedMeal: MutableStateFlow<MealInfo?> = MutableStateFlow(null)
     val selectedMeal: StateFlow<MealInfo?> = _selectedMeal

@@ -2,7 +2,7 @@ package com.demircandemir.relaysample.domain.repositories
 
 import com.demircandemir.relaysample.domain.model.MealInfo
 
-interface LocalDataSource {
+fun interface LocalDataSource {
 
     suspend fun getSelectedMeal(mealId: Int): MealInfo
 }

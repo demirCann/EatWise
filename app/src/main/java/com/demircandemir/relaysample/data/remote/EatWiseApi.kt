@@ -12,23 +12,28 @@ interface EatWiseApi {
     suspend fun getUserInfo(
         @Query("id") id: String
     ): UserResponse
+
     @POST("/users/")
     suspend fun postUserInfo(
         @Query("id") id: String
     )
+
     @GET("/meals/page/")
     suspend fun getAllMeals(
         @Query("page") page: Int = 1
     ): MealsResponse
+
     @GET("/meals/repast/")
     suspend fun getMealsForSelection(
         @Query("repast") repast: String = "Breakfast",
         @Query("page") page: Int = 1
     ): MealsResponse
+
     @GET("/meals/")
     suspend fun getSelectedMeal(
         @Query("meal_id") id: Int
     ): MealResponse
+
     @GET("/meals/search")
     suspend fun searchMeals(
         @Query("meal_name") name: String

@@ -25,12 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.demircandemir.relaysample.R
-import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.navigation.Screens
 
 
@@ -158,19 +155,6 @@ data class MealAddRow(
     val selectedMeal: String? = null,
     val route : String
 )
-
-
-
-
-@Preview()
-@Composable
-fun MealAddRowsPreview() {
-    /*MealAddRows(
-        navController = rememberNavController()
-    )
-
-     */
-}
 
 
 
