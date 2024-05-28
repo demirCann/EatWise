@@ -16,6 +16,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 
@@ -25,6 +26,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @MainOkHttpClient
     fun provideHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .readTimeout(15, TimeUnit.SECONDS)
@@ -36,7 +38,8 @@ object NetworkModule {
     @OptIn(ExperimentalSerializationApi::class)
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @MainRetrofit
+    fun provideRetrofit(@MainOkHttpClient okHttpClient: OkHttpClient): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -48,7 +51,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserApi(retrofit: Retrofit): EatWiseApi {
+    fun provideUserApi(@MainRetrofit retrofit: Retrofit): EatWiseApi {
         return retrofit.create(EatWiseApi::class.java)
     }
 
@@ -65,3 +68,12 @@ object NetworkModule {
     }
 
 }
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MainOkHttpClient
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MainRetrofit
