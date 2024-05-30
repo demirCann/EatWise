@@ -2,11 +2,20 @@ package com.demircandemir.relaysample.presentation.screens.survey
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.demircandemir.relaysample.domain.model.UserInfo
+import com.demircandemir.relaysample.domain.use_cases.UseCases
 import com.demircandemir.relaysample.presentation.screens.survey.question.ChoiceItem
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-
-class SurveyViewModel(): ViewModel() {
+@HiltViewModel
+class SurveyViewModel @Inject constructor(
+    private val useCases: UseCases
+): ViewModel() {
 
 
     private val questionOrder: List<SurveyQuestion> = listOf(
@@ -16,6 +25,9 @@ class SurveyViewModel(): ViewModel() {
         SurveyQuestion.WEIGHT,
         SurveyQuestion.HEIGHT,
         SurveyQuestion.EXERCISE,
+        SurveyQuestion.WEIGHT_GOAL,
+        SurveyQuestion.TIME_FRAME,
+        SurveyQuestion.DIET_TYPE
     )
 
     private var questionIndex = 0
@@ -45,6 +57,18 @@ class SurveyViewModel(): ViewModel() {
     private val _exerciseResponse = mutableStateOf("")
     val exerciseResponse: String
         get() = _exerciseResponse.value
+
+    private val _weightGoalResponse = mutableStateOf("")
+    val weightGoalResponse: String
+        get() = _weightGoalResponse.value
+
+    private val _timeFrameResponse = mutableStateOf("")
+    val timeFrameResponse: String
+        get() = _timeFrameResponse.value
+
+    private val _dietTypeResponse = mutableStateOf<ChoiceItem?>(null)
+    val dietTypeResponse: ChoiceItem?
+        get() = _dietTypeResponse.value
 
 
     // ----- Survey status exposed as State -----
@@ -116,6 +140,21 @@ class SurveyViewModel(): ViewModel() {
         _isNextEnabled.value = getIsNextEnabled()
     }
 
+    fun onWeightGoalResponse(weightGoal: String) {
+        _weightGoalResponse.value = weightGoal
+        _isNextEnabled.value = getIsNextEnabled()
+    }
+
+    fun onTimeFrameResponse(timeFrame: String) {
+        _timeFrameResponse.value = timeFrame
+        _isNextEnabled.value = getIsNextEnabled()
+    }
+
+    fun onDietTypeResponse(dietType: ChoiceItem) {
+        _dietTypeResponse.value = dietType
+        _isNextEnabled.value = getIsNextEnabled()
+    }
+
 
 
 
@@ -127,6 +166,10 @@ class SurveyViewModel(): ViewModel() {
             SurveyQuestion.WEIGHT -> _weightResponse.value != ""
             SurveyQuestion.HEIGHT -> _heightResponse.value != ""
             SurveyQuestion.EXERCISE -> _exerciseResponse.value != ""
+            SurveyQuestion.WEIGHT_GOAL -> _weightGoalResponse.value != ""
+            SurveyQuestion.TIME_FRAME -> _timeFrameResponse.value != ""
+            SurveyQuestion.DIET_TYPE -> _dietTypeResponse.value != null
+
         }
     }
 
@@ -139,6 +182,45 @@ class SurveyViewModel(): ViewModel() {
             surveyQuestion = questionOrder[questionIndex]
         )
     }
+
+
+    fun saveUserInfo(
+        id: Int,
+        name: String,
+        image: String,
+        goal: String,
+        weight: String,
+        height: String,
+        age: String,
+        gender: String,
+        exerciseDayInAWeek: String,
+        weightGoal: String,
+        timeFrame: String,
+        diet_type: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.postUserInfoUseCase(
+                id = id,
+                name = name,
+                image = image,
+                goal = goal,
+                weight = weight,
+                height = height,
+                age = age,
+                gender = gender,
+                exerciseDayInAWeek = exerciseDayInAWeek,
+                weightGoal = weightGoal,
+                timeFrame = timeFrame,
+                diet_type = diet_type
+            )
+        }
+    }
+
+
+
+
+
+
 }
 
 
@@ -152,6 +234,9 @@ enum class SurveyQuestion {
     WEIGHT,
     HEIGHT,
     EXERCISE,
+    WEIGHT_GOAL,
+    TIME_FRAME,
+    DIET_TYPE
 }
 
 data class SurveyScreenData(

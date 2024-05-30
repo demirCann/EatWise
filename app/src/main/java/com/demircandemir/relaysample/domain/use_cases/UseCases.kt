@@ -4,10 +4,12 @@ import com.demircandemir.relaysample.domain.use_cases.get_all_meals.GetAllMealsU
 import com.demircandemir.relaysample.domain.use_cases.get_meals_for_selection.GetMealForSelectionUseCase
 import com.demircandemir.relaysample.domain.use_cases.get_selected_meal.GetSelectedMealUseCase
 import com.demircandemir.relaysample.domain.use_cases.get_user_info.GetUserInfoUseCase
+import com.demircandemir.relaysample.domain.use_cases.post_diet_plan.PostDietPlanUseCase
 import com.demircandemir.relaysample.domain.use_cases.post_user_info.PostUserInfoUseCase
 import com.demircandemir.relaysample.domain.use_cases.read_survey.ReadSurveyStateUseCases
 import com.demircandemir.relaysample.domain.use_cases.save_survey.SaveSurveyUseCase
 import com.demircandemir.relaysample.domain.use_cases.search_meals.SearchMealsUseCase
+import com.demircandemir.relaysample.domain.use_cases.send_message_openai.SendMessageOpenAIUseCase
 
 data class UseCases(
     val saveSurveyUseCase: SaveSurveyUseCase,
@@ -17,5 +19,7 @@ data class UseCases(
     val getAllMealsUseCase: GetAllMealsUseCase,
     val getMealForSelectionUseCase: GetMealForSelectionUseCase,
     val getSelectedMealUseCase: GetSelectedMealUseCase,
-    val searchMealsUseCase: SearchMealsUseCase
+    val searchMealsUseCase: SearchMealsUseCase,
+    val sendMessageOpenAIUseCase: SendMessageOpenAIUseCase,
+    val postDietPlanUseCase: PostDietPlanUseCase
 )

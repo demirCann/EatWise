@@ -61,6 +61,7 @@ fun BreakfastMealsScreen(
 
                 ListContent(
                     meals = meals,
+                    isSelectionScreen = false,
                     modifier = Modifier.padding(bottom = 60.dp),
                     navController = navController
                 )

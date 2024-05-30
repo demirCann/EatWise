@@ -51,6 +51,7 @@ fun MealsScreen(
 
             ListContent(
                 meals = allMeals,
+                isSelectionScreen = false,
                 navController = navController
             )
         }

@@ -1,9 +1,13 @@
 package com.demircandemir.relaysample.presentation.screens.meals
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,9 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.navigation.Screens
 
@@ -36,22 +43,22 @@ fun Carousel(
     val carouselItems = listOf(
         CarouselItemData(
             mealName = "Breakfast",
-            mealImage = painterResource(id = R.drawable.breakfast_image),
+            mealImageUri = "https://drive.google.com/uc?export=view&id=1ymE1mvU-s2HW3uUoXwULZJX1KM2nGeHo",
             mealRoute = Screens.BreakfastMeals.passRepast("Breakfast")
         ),
         CarouselItemData(
             mealName = "Lunch",
-            mealImage = painterResource(id = R.drawable.lunch_image),
+            mealImageUri = "https://drive.google.com/uc?export=view&id=1pucK0wZvnWFs7ts-55SYusfwTM0KB7j5",
             mealRoute = Screens.BreakfastMeals.passRepast("Lunch")
         ),
         CarouselItemData(
             mealName = "Dinner",
-            mealImage = painterResource(id = R.drawable.meat_food),
+            mealImageUri = "https://drive.google.com/uc?export=view&id=1EwFV2tqbuhw9zyl2cNMrvJynRjOspaWg",
             mealRoute = Screens.BreakfastMeals.passRepast("Dinner")
         ),
         CarouselItemData(
             mealName = "Snack",
-            mealImage = painterResource(id = R.drawable.snacks_image),
+            mealImageUri = "https://drive.google.com/uc?export=view&id=1wyDwd6C_iI9ZzlTbjUnaSWiOFyO6uEId",
             mealRoute = Screens.BreakfastMeals.passRepast("Snack")
         ),
     )
@@ -61,7 +68,7 @@ fun Carousel(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(carouselItems) {
+        items(carouselItems, key = { it.mealName }) {
             CarouselItem(
                 mealData = it,
                 onClickedItem = {
@@ -87,10 +94,7 @@ fun CarouselItem(
         modifier = Modifier
             .size(width = 120.dp, 160.dp)
             .clip(shape = RoundedCornerShape(18.dp))
-            .paint(
-                painter = mealData.mealImage,
-                contentScale = ContentScale.Crop
-            )
+            .background(Color.DarkGray)
             .clickable {
                 Log.d("CarouselItem", "onClickedItem: ")
                 onClickedItem()
@@ -98,12 +102,25 @@ fun CarouselItem(
         contentAlignment = Alignment.BottomStart
 
     ) {
-        Text(
-            text = mealData.mealName,
-            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
+        Image(
+            painter = rememberAsyncImagePainter(model = mealData.mealImageUri),
+            contentDescription = mealData.mealName,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = mealData.mealName,
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
@@ -122,7 +139,7 @@ fun CarouselItemPreview() {
 
 data class CarouselItemData(
     val mealName: String,
-    val mealImage: Painter,
+    val mealImageUri: String,
     val mealRoute: String
 )
 

@@ -11,9 +11,12 @@ import com.demircandemir.relaysample.domain.model.MealRemoteKeys
 
 @Database(entities = [MealInfo::class, MealRemoteKeys::class], version = 1)
 @TypeConverters(DatabaseConvertor::class)
+
 abstract class EatWiseDatabase: RoomDatabase() {
 
     abstract fun mealDao(): MealDao
+
+//    abstract fun userInfoDao(): UserInfoDao
 
     abstract fun mealRemoteKeysDao(): MealRemoteKeysDao
 

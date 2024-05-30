@@ -10,6 +10,7 @@ object Constants {
 
     const val EAT_WISE_DATABASE_NAME = "eat_wise_database"
     const val MEAL_DATABASE = "meal_table"
+    const val USER_INFO_TABLE = "user_info_table"
     const val MEAL_REMOTE_KEYS_DATABASE = "meal_remote_keys_table"
 
     const val MEAL_ID_ARGUMENT_KEY = "mealId"

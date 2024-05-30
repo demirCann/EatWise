@@ -26,9 +26,9 @@ fun ProfileTopAppBar(
             }
         },
         actions = {
-            SettingsButton {
-                onSettingsClicked()
-            }
+//            SettingsButton {
+//                onSettingsClicked()
+//            }
         }
     )
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,6 +23,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
@@ -33,8 +35,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +51,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -64,6 +71,9 @@ fun DetailsContent(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
     )
 
+    LaunchedEffect(scaffoldState.bottomSheetState) {
+        scaffoldState.bottomSheetState.expand()
+    }
 
     BottomSheetScaffold(
         sheetShape = RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp),
@@ -77,12 +87,28 @@ fun DetailsContent(
                 }
             )
         },
-        content = {
+        content = { paddingValues ->
             BackgroundContent(
-                onCloseClicked = {}
+                meal = meal,
+                paddingValues = paddingValues,
+                onCloseClicked = {
+                    onFinishedClicked()
+                }
             )
         }
     )
+
+//    DisposableEffect(Unit) {
+//        val callback = object : BottomSheetScaffoldState.DragCallback {
+//            override fun onDrag(offset: Float): Boolean {
+//                return false // Prevent dragging
+//            }
+//        }
+//        scaffoldState.bottomSheetState.dragCallback = callback
+//        onDispose {
+//            scaffoldState.bottomSheetState.dragCallback = null
+//        }
+//    }
 
 }
 
@@ -98,7 +124,7 @@ fun LineIndicatorExample(
     Column(modifier  = Modifier.heightIn(min = 100.dp, max = 500.dp)){
 
 
-        val pageCount = 5
+        val pageCount = meal.recipe.size
         val pagerState = androidx.compose.foundation.pager.rememberPagerState(pageCount = { pageCount + 1 })
 
 
@@ -123,21 +149,35 @@ fun LineIndicatorExample(
 
 @Composable
 fun BackgroundContent(
+    meal: MealInfo,
+    paddingValues: PaddingValues,
     onCloseClicked: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(1f)
-                .align(Alignment.TopStart),
-            painter = painterResource(id = R.drawable.meat_food3),
+
+        AsyncImage(
+            model = meal.image,
             contentDescription = "Meat Food",
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.TopStart),
             contentScale = ContentScale.Crop
         )
+
+//        Image(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .fillMaxHeight(1f)
+//                .align(Alignment.TopStart),
+//            painter = painterResource(id = R.drawable.meat_food3),
+//            contentDescription = "Meat Food",
+//            contentScale = ContentScale.Crop
+//        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -186,6 +226,7 @@ fun PagerSampleItem(
 
     } else {
         StepPage(
+            meal = meal,
             pageNumber = pageNumber,
             pagerState = pagerState,
             onFinishedClicked = {
@@ -214,83 +255,76 @@ fun StartPage(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
             .padding(top = 16.dp),
-        ) {
+    ) {
 
         Text(
             text = meal.name,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.headlineLarge,
-            )
-
-        Text(
-            text = "Launch/ 15 min",
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Thin
-            )
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
-                modifier = Modifier
-                    .height(60.dp)
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.tertiaryContainer),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            modifier = Modifier
+                .height(60.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.tertiaryContainer),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                    text = meal.calorie,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${meal.calorie} kcal",
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                    Text(
-                        text = "Energy",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "${meal.protein} g",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Text(
-                        text = "Protein",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "${meal.carbohydrate} g",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Text(
-                        text = "Carbs",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "${meal.fat} g",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Text(
-                        text = "Fat",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-
+                Text(
+                    text = "Calories",
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${meal.protein} g",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Text(
+                    text = "Protein",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${meal.carbohydrate} g",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Text(
+                    text = "Carbs",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${meal.fat} g",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Text(
+                    text = "Fat",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+
+        }
 
 
 
@@ -304,93 +338,24 @@ fun StartPage(
                 text = "Ingredients",
                 style = MaterialTheme.typography.titleMedium,
             )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = "2 serves",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Thin
-            )
         }
 
 
-        Row(
-            modifier = Modifier
-                .padding(start = 18.dp, top = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Chicken breasts",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-
-            Text(
-                text = "250 g",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Thin
-            )
+        meal.ingredients.forEach {
+            Row(
+                modifier = Modifier
+                    .padding(start = 18.dp, top = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
         }
 
-
-        Row(
-            modifier = Modifier
-                .padding(start = 18.dp, top = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Unslated butter",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-
-            Text(
-                text = "1 tbsp",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Thin
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .padding(start = 18.dp, top = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Sesame or vegatable oil",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-
-            Text(
-                text = "2 tbsp",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Thin
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .padding(start = 18.dp, top = 16.dp, end = 16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Fresh ginger",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-
-            Text(
-                text = "2 tbsp",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Thin
-            )
-        }
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(
@@ -412,12 +377,13 @@ fun StartPage(
                 Text(text = "Start Cooking")
             }
         }
-        }
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StepPage(
+    meal: MealInfo,
     pageNumber: Int,
     pagerState: androidx.compose.foundation.pager.PagerState,
     onFinishedClicked : () -> Unit
@@ -469,46 +435,7 @@ fun StepPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Bacon",
-                style = MaterialTheme.typography.titleLarge,
-            )
-
-            Text(
-                text = "50 g",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-
-        Divider()
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Soy sauce",
-                style = MaterialTheme.typography.titleLarge,
-            )
-
-            Text(
-                text = "200 ml",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-        Divider()
+        HorizontalDivider()
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -516,7 +443,7 @@ fun StepPage(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp),
-            text = "We tie the bacon with twine so that the skin is on the outside and one end and the other practically meet. Heat a little oil in a pressure cooker and mark the bacon all over until golden brown. We remove and discard the oil.",
+            text =  meal.recipe[pagerState.currentPage - 1],
             style = MaterialTheme.typography.bodyMedium,
         )
 

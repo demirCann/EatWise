@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,26 +36,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.domain.model.MealInfo
 import com.demircandemir.relaysample.navigation.Screens
+import com.demircandemir.relaysample.presentation.screens.selection.SelectionScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectableFoodCard(
     meal: MealInfo,
+    isSelectionScreen: Boolean,
+    selectionScreenViewModel: SelectionScreenViewModel = hiltViewModel(),
     //onAddedClicked: (Int) -> Unit,
     navController: NavHostController
 ) {
 
-    var selected by remember { mutableStateOf(false) }
+    val selectedMeals by selectionScreenViewModel.selectedMeals.collectAsState()
+    var selected by remember { mutableStateOf(selectedMeals.contains(meal.id)) }
 
 
     LaunchedEffect(key1 = selected) {
         if (selected) {
-            navController.navigate(Screens.Home.passMealId(meal.id))
+            selectionScreenViewModel.addMeal(meal.id)
+        } else {
+            selectionScreenViewModel.removeMeal(meal.id)
         }
     }
 
@@ -64,18 +73,18 @@ fun SelectableFoodCard(
         },
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
-            .size(width = 140.dp, height = 280.dp)
+            .size(width = 140.dp, height = 320.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
             Image(
-                painter = painterResource(id = R.drawable.meat_food3),
+                painter = rememberAsyncImagePainter(model = meal.image),
                 contentDescription = stringResource(R.string.food_image),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(140.dp, 120.dp),
+                    .size(140.dp, 180.dp),
             )
 
             Box(
@@ -113,30 +122,42 @@ fun SelectableFoodCard(
                             style = MaterialTheme.typography.bodyMedium
                         )
 
-                        IconButton(
-                            onClick = {
-                                      selected = !selected
-                            },
-                            modifier = Modifier
-                                .size(24.dp)
-                                .selectable(
-                                    selected = selected,
-                                    onClick = {}
-                                )
-                        ) {
+                        Text(
+                            text = "${meal.diet_type}",
+                            fontWeight = FontWeight.Thin,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
 
-                            if (selected) {
-                                Icon(
-                                imageVector = Icons.Filled.CheckCircle,
-                                contentDescription = stringResource(R.string.food_card_favorite_button)
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Filled.AddCircle,
-                                    contentDescription = stringResource(R.string.food_card_favorite_button)
-                                )
+
+                        if(isSelectionScreen) {
+                            IconButton(
+                                onClick = {
+                                    selected = !selected
+                                },
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .selectable(
+                                        selected = selected,
+                                        onClick = {}
+                                    )
+                            ) {
+                                if (selected) {
+                                    Icon(
+                                        imageVector = Icons.Filled.CheckCircle,
+                                        contentDescription = stringResource(R.string.food_card_favorite_button)
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Filled.AddCircle,
+                                        contentDescription = stringResource(R.string.food_card_favorite_button)
+                                    )
+                                }
                             }
                         }
+
+
 
                     }
                 }
@@ -146,21 +167,21 @@ fun SelectableFoodCard(
     }
 }
 
-@Preview
-@Composable
-fun SelectableFoodCardPreview() {
-    SelectableFoodCard(
-        meal = MealInfo(
-            id = 1,
-            name = "a",
-            calorie = "100",
-            image = "image",
-            recipe = listOf(),
-            mealType = "mealType",
-            protein = "protein",
-            fat = "fat",
-            carbohydrate = "carbonhydrate",
-        ),
-        navController = rememberNavController()
-    )
-}
+//@Preview
+//@Composable
+//fun SelectableFoodCardPreview() {
+//    SelectableFoodCard(
+//        meal = MealInfo(
+//            id = 1,
+//            name = "a",
+//            calorie = "100",
+//            image = "image",
+//            recipe = listOf(),
+//            mealType = "mealType",
+//            protein = "protein",
+//            fat = "fat",
+//            carbohydrate = "carbonhydrate",
+//        ),
+//        navController = rememberNavController()
+//    )
+//}

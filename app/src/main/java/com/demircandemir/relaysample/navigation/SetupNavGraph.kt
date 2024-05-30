@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -19,6 +20,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.demircandemir.relaysample.presentation.screens.chat.ChatScreen
 import com.demircandemir.relaysample.presentation.screens.details.DetailScreen
 import com.demircandemir.relaysample.presentation.screens.home.HomeScreen
 import com.demircandemir.relaysample.presentation.screens.login.GoogleAuthUiClient
@@ -57,7 +59,7 @@ fun SetupNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screens.Survey.route
+        startDestination = Screens.Home.route
     ) {
         composable(Screens.Splash.route) {
             SplashScreen(navController = navController)
@@ -67,7 +69,7 @@ fun SetupNavGraph(
             Log.d("Screens", "SignInComposable: Executed")
 
             val viewModel = viewModel<SignInViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state by viewModel.state.collectAsState()
 
 
             if (googleAuthUiClient.getSignedInUser() != null) {
@@ -100,7 +102,7 @@ fun SetupNavGraph(
                         ).show()
 
                         Log.d("Screens", "Success Launched Effect launched")
-                        navController.navigate(Screens.Survey.route)
+                        navController.navigate(Screens.Home.route)
                     }
                 }
 
@@ -191,6 +193,11 @@ fun SetupNavGraph(
 
         composable(Screens.FoodSelection.route) {
             FoodSelectionScreen(navController = navController)
+        }
+
+
+        composable(Screens.ChatScreen.route) {
+            ChatScreen()
         }
     }
 }

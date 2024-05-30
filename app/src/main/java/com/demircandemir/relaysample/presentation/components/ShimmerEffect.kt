@@ -39,7 +39,7 @@ fun ShimmerEffect() {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(140.dp),
         modifier = Modifier
-            .fillMaxHeight(),
+            .fillMaxHeight().padding(vertical = 48.dp),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)

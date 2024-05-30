@@ -26,7 +26,9 @@ object DatabaseModule {
             context,
             EatWiseDatabase::class.java,
             EAT_WISE_DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
 

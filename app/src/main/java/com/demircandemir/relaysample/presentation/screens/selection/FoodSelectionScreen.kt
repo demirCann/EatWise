@@ -19,9 +19,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.demircandemir.relaysample.domain.model.MealsRequest
 import com.demircandemir.relaysample.navigation.Screens
 import com.demircandemir.relaysample.presentation.common.ListContent
 import com.demircandemir.relaysample.presentation.screens.meals.MealsTopBar
+import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -35,8 +37,7 @@ fun FoodSelectionScreen(
 
     val meals = selectionScreenViewModel.meals.collectAsLazyPagingItems()
 
-
-
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     Scaffold(
         topBar = {
@@ -52,7 +53,25 @@ fun FoodSelectionScreen(
         },
         floatingActionButton = {
             Button(
-                onClick = {},
+                onClick = {
+
+                    selectionScreenViewModel.putDietPlan(
+                        userId = 1,
+                        repast = repast,
+                        meals = MealsRequest(
+                            meals = selectionScreenViewModel.selectedMeals.value
+                        )
+                    )
+                    navController.popBackStack()
+//
+//
+//
+//                          selectionScreenViewModel.postDietPlan(
+//                              userId = 2,
+//                              repast = repast,
+//                              meals = "{${selectionScreenViewModel.selectedMeals.joinToString(separator = ",")}}"
+//                          )
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.94f)
                     .height(50.dp),
@@ -71,6 +90,7 @@ fun FoodSelectionScreen(
 
                 ListContent(
                     meals = meals,
+                    isSelectionScreen = true,
                     modifier = Modifier.padding(bottom = 60.dp),
                     navController = navController
                 )

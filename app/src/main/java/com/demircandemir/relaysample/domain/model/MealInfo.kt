@@ -18,5 +18,7 @@ data class MealInfo(
     val carbohydrate: String,
     val mealType: String,
     val recipe: List<String>,
-    val image: String
+    val ingredients: List<String>,
+    val image: String,
+    val diet_type: String = "vegetarian"
 )

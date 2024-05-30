@@ -2,6 +2,7 @@ package com.demircandemir.relaysample.presentation.screens.survey
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.presentation.screens.survey.question.ChoiceItem
 import com.demircandemir.relaysample.presentation.screens.survey.question.FillQuestion
@@ -43,6 +44,27 @@ fun GenderQuestion(
         ),
         selectedAnswer = selectedAnswer,
         onOptionSelected =  onOptionsSelected,
+        modifier = modifier,
+    )
+}
+
+
+@Composable
+fun DietTypeQuestion(
+    selectedAnswer: ChoiceItem?,
+    onOptionsSelected: (ChoiceItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SingleChoiceQuestion(
+        titleResourceId = R.string.what_is_your_diet_type,
+        directionsResourceId = R.string.select_one,
+        possibleAnswers = listOf(
+            ChoiceItem(R.string.normal),
+            ChoiceItem(R.string.vegetarian),
+            ChoiceItem(R.string.vegan),
+        ),
+        selectedAnswer = selectedAnswer,
+        onOptionSelected = onOptionsSelected,
         modifier = modifier,
     )
 }
@@ -100,6 +122,36 @@ fun ExerciseQuestion(
 ) {
     FillQuestion(
         titleResourceId = R.string.exercise_day,
+        text = text,
+        unit = UnitClass.DAY,
+        onTextChange = onTextChange,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun WeightGoalQuestion(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FillQuestion(
+        titleResourceId = R.string.weight_goal,
+        text = text,
+        unit = UnitClass.KG,
+        onTextChange = onTextChange,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TimeFrameQuestion(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FillQuestion(
+        titleResourceId = R.string.time_frame,
         text = text,
         unit = UnitClass.DAY,
         onTextChange = onTextChange,

@@ -49,7 +49,7 @@ fun CalorieCalcBox(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "$totalCalorieIntake",
+                        text = "${totalCalorieIntake - currentCalorieIntake}",
                         style = MaterialTheme.typography.bodyLarge,
                     )
 
@@ -73,7 +73,7 @@ fun CalorieCalcBox(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "${totalCalorieIntake - currentCalorieIntake} ",
+                        text = "$currentCalorieIntake",
                         style = MaterialTheme.typography.bodyLarge,
                     )
 
@@ -85,7 +85,7 @@ fun CalorieCalcBox(
 
             }
 
-            IngredientsBar()
+//            IngredientsBar()
 
         }
     }

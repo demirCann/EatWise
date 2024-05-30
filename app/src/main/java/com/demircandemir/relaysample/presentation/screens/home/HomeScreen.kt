@@ -13,10 +13,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.demircandemir.relaysample.navigation.Screens
@@ -28,8 +31,15 @@ import com.demircandemir.relaysample.navigation.bottomBarNavigation.BottomBarScr
 @ExperimentalMaterial3Api
 @Composable
 fun HomeScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchMeals()
+    }
+
     Scaffold(
         topBar = {
             HomeTopBar(
@@ -63,7 +73,7 @@ fun BottomBar(
     val screens = listOf(
         BottomBarScreenItem.Home,
         BottomBarScreenItem.Meals,
-        BottomBarScreenItem.Progress
+        BottomBarScreenItem.Chat
     )
 
     AnimatedVisibility(
@@ -79,7 +89,7 @@ fun BottomBar(
                 NavigationBarItem(
                     icon = {
                         Icon(
-                            imageVector = if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon,
+                            painter = if (currentRoute == screen.route) painterResource(id = screen.selectedIcon) else painterResource(id = screen.unselectedIcon),
                             contentDescription = screen.title
                         )
                     },

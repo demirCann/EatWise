@@ -37,6 +37,7 @@ fun SearchScreen(
         content = { paddingValues ->
             ListContent(
                 searchedMeals,
+                isSelectionScreen = false,
                 modifier = Modifier.padding(paddingValues),
                 navController = navController
             )

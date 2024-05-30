@@ -59,7 +59,7 @@ fun SplashScreen(
                 }
             )
         )
-        delay(3000L)
+        delay(2000L)
 
         if (googleAuthUiClient.getSignedInUser() != null) {
             navController.navigate(Screens.Home.route) {

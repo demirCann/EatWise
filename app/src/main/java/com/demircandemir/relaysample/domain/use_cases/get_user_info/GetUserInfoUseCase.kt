@@ -6,7 +6,7 @@ import com.demircandemir.relaysample.domain.model.UserInfo
 class GetUserInfoUseCase(
     private val repository: Repository
 ) {
-    operator fun invoke(id: String): UserInfo {
-        return repository.getUserInfo(id = id)
+    suspend operator fun invoke(): UserInfo {
+        return repository.getUserInfo()
     }
 }

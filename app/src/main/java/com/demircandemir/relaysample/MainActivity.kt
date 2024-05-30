@@ -14,6 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.demircandemir.relaysample.navigation.Screens
 import com.demircandemir.relaysample.navigation.SetupNavGraph
+import com.demircandemir.relaysample.presentation.screens.chat.ChatScreen
 import com.demircandemir.relaysample.presentation.screens.home.BottomBar
 import com.demircandemir.relaysample.ui.theme.RelaySampleTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 when (navBackStackEntry?.destination?.route) { // Current route
-                    Screens.Home.route, Screens.Recipe.route, Screens.Progress.route -> {
+                    Screens.Home.route, Screens.Recipe.route, Screens.ChatScreen.route -> {
                         bottomBarState.value = true
                     }
                     else -> {
@@ -56,6 +57,8 @@ class MainActivity : ComponentActivity() {
 
                 ) {
                     SetupNavGraph(scope = lifecycleScope, navController = navController)
+
+                    //ChatScreen()
                 }
             }
         }

@@ -51,6 +51,8 @@ sealed class Screens(val route: String) {
     }
 
 
+    data object ChatScreen: Screens("chat_screen")
+
 
 }
 

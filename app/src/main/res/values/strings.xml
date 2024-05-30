@@ -11,9 +11,10 @@
     <string name="food_card_favorite_button">Food Card Favorite Button</string>
     <string name="search_button">Search Button</string>
     <string name="back_arrow">Back Arrow</string>
-    <string name="lose_weight">Lose weight</string>
-    <string name="maintain_weight">Maintain weight</string>
-    <string name="gain_weight">Gain weight</string>
+
+    <string name="lose_weight">Lose Weight</string>
+    <string name="maintain_weight">Maintain Weight</string>
+    <string name="gain_weight">Gain Weight</string>
     <string name="what_goal_do_you_have_in_mind">What goal do you have in mind?</string>
     <string name="select_one">Select one.</string>
     <string name="gender">What sex should we use to calculate your recommendations?</string>
@@ -37,4 +38,13 @@
     <string name="exercise_day">How many times do you exercise in a week?</string>
     <string name="error_icon">Error Icon</string>
     <string name="eatwise">EatWise</string>
+    <string name="chat">Chat</string>
+    <string name="user_image">User Image</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="what_is_your_diet_type">What is your diet type?</string>
+    <string name="normal">Normal</string>
+    <string name="vegetarian">Vegetarian</string>
+    <string name="vegan">Vegan</string>
+    <string name="weight_goal">What\'s your weight goal ?</string>
+    <string name="time_frame">How many days do you want to reach the goal weight?</string>
 </resources>
