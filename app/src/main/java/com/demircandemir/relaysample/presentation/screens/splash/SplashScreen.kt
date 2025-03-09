@@ -1,6 +1,5 @@
 package com.demircandemir.relaysample.presentation.screens.splash
 
-import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -11,47 +10,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.navigation.Screens
-import com.demircandemir.relaysample.presentation.screens.login.GoogleAuthUiClient
-import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     navController: NavHostController,
+    splashViewModel: SplashViewModel = hiltViewModel()
 ) {
+    val uiState by splashViewModel.splashUiState.collectAsStateWithLifecycle()
 
     val scale = remember {
         Animatable(0f)
     }
 
-
-    val context = LocalContext.current
-
-    val googleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            context = context.applicationContext,
-            oneTapClient = Identity.getSignInClient(context.applicationContext)
-        )
-    }
-
-
-
-
-
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = Unit) {
         scale.animateTo(
             targetValue = 0.7f,
-
             animationSpec = tween(
                 durationMillis = 800,
                 easing = {
@@ -61,10 +47,18 @@ fun SplashScreen(
         )
         delay(2000L)
 
-        if (googleAuthUiClient.getSignedInUser() != null) {
-            navController.navigate(Screens.Home.route) {
-                popUpTo(Screens.Splash.route) {
-                    inclusive = true
+        if (uiState.isUserLoggedIn == true) {
+            if (uiState.isSurveyCompleted == true) {
+                navController.navigate(Screens.Home.route) {
+                    popUpTo(Screens.Splash.route) {
+                        inclusive = true
+                    }
+                }
+            } else {
+                navController.navigate(Screens.Survey.route) {
+                    popUpTo(Screens.Splash.route) {
+                        inclusive = true
+                    }
                 }
             }
         } else {
@@ -76,12 +70,8 @@ fun SplashScreen(
         }
     }
 
-    Log.d("Screens", "SplashScreen: Executed")
-
     SplashScreenContent()
-
 }
-
 
 @Composable
 fun SplashScreenContent() {
@@ -98,9 +88,6 @@ fun SplashScreenContent() {
         )
     }
 }
-
-
-
 
 @Preview(showBackground = true)
 @Composable
