@@ -1,8 +1,5 @@
 package com.demircandemir.relaysample.presentation.screens.details
 
-import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +19,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,11 +29,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -46,21 +39,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.domain.model.MealInfo
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DetailsContent(
     meal: MealInfo,
@@ -97,25 +83,8 @@ fun DetailsContent(
             )
         }
     )
-
-//    DisposableEffect(Unit) {
-//        val callback = object : BottomSheetScaffoldState.DragCallback {
-//            override fun onDrag(offset: Float): Boolean {
-//                return false // Prevent dragging
-//            }
-//        }
-//        scaffoldState.bottomSheetState.dragCallback = callback
-//        onDispose {
-//            scaffoldState.bottomSheetState.dragCallback = null
-//        }
-//    }
-
 }
 
-
-
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun LineIndicatorExample(
     meal: MealInfo,
@@ -123,14 +92,11 @@ fun LineIndicatorExample(
 ) {
     Column(modifier  = Modifier.heightIn(min = 100.dp, max = 500.dp)){
 
-
         val pageCount = meal.recipe.size
         val pagerState = androidx.compose.foundation.pager.rememberPagerState(pageCount = { pageCount + 1 })
 
-
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
-            beyondBoundsPageCount = 4,
             state = pagerState)
         {
             PagerSampleItem(
@@ -145,7 +111,6 @@ fun LineIndicatorExample(
 
     }
 }
-
 
 @Composable
 fun BackgroundContent(
@@ -169,15 +134,6 @@ fun BackgroundContent(
             contentScale = ContentScale.Crop
         )
 
-//        Image(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .fillMaxHeight(1f)
-//                .align(Alignment.TopStart),
-//            painter = painterResource(id = R.drawable.meat_food3),
-//            contentDescription = "Meat Food",
-//            contentScale = ContentScale.Crop
-//        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -204,8 +160,6 @@ fun LineIndicatorExamplePreview() {
     //LineIndicatorExample()
 }
 
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun PagerSampleItem(
     meal: MealInfo,
@@ -213,11 +167,6 @@ fun PagerSampleItem(
     pagerState: androidx.compose.foundation.pager.PagerState,
     onFinishedClicked : () -> Unit
 ) {
-
-
-    //StepPage(pageNumber = pageNumber, pagerState = pagerState, onFinishedClicked = onFinishedClicked)
-
-
     if (pagerState.currentPage == 0) {
         StartPage(
             meal = meal,
@@ -234,11 +183,6 @@ fun PagerSampleItem(
             }
         )
     }
-
-
-
-
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -256,7 +200,6 @@ fun StartPage(
             .background(MaterialTheme.colorScheme.surface)
             .padding(top = 16.dp),
     ) {
-
         Text(
             text = meal.name,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -323,7 +266,6 @@ fun StartPage(
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
-
         }
 
 
@@ -380,7 +322,6 @@ fun StartPage(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StepPage(
     meal: MealInfo,
@@ -399,7 +340,6 @@ fun StepPage(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(
             text = "Step ${pagerState.currentPage}",
             style = MaterialTheme.typography.headlineLarge,
@@ -473,7 +413,6 @@ fun StepPage(
                     Text(text = "Previous")
                 }
 
-
                 Button(
                     onClick = {
                         Log.d("Pager", "PagerStateNext: ${pagerState.currentPage}")
@@ -499,7 +438,6 @@ fun StepPage(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Button(
                     onClick = {
                         Log.d("Pager", "PagerStatePrevious: ${pagerState.pageCount}")
@@ -517,7 +455,6 @@ fun StepPage(
                 ) {
                     Text(text = "Previous")
                 }
-
 
                 Button(
                     onClick = {
@@ -538,14 +475,9 @@ fun StepPage(
                 }
             }
         }
-
     }
-
 }
 
-
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Preview
 @Composable
 fun PagerSampleItemPreview() {
