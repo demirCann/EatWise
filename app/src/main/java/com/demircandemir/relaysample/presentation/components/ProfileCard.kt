@@ -87,7 +87,7 @@ fun ProfileCard(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Text(
-                        text = "years old",
+                        text = stringResource(R.string.years_old),
                         style = MaterialTheme.typography.bodyLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -112,15 +112,15 @@ fun ProfileCard(
         Spacer(modifier = Modifier.height(16.dp))
         ProfileInfoRow(label = stringResource(R.string.current_weight_label), value = "${userInfo.weight} kg")
         Spacer(modifier = Modifier.height(8.dp))
-        ProfileInfoRow(label = "Height", value = "${userInfo.height} cm")
+        ProfileInfoRow(label = stringResource(R.string.height_label), value = "${userInfo.height} cm")
         Spacer(modifier = Modifier.height(8.dp))
         userInfo.goal?.let { ProfileInfoRow(label = stringResource(R.string.goal_label), value = it) }
         Spacer(modifier = Modifier.height(8.dp))
-        ProfileInfoRow(label = "Weight Goal", value = "${userInfo.weight_goal} kg")
+        ProfileInfoRow(label = stringResource(R.string.weight_goal_label), value = "${userInfo.weight_goal} kg")
         Spacer(modifier = Modifier.height(8.dp))
-        ProfileInfoRow(label = "Exercise Day in a Week", value = userInfo.exercise_amount.toString())
+        ProfileInfoRow(label = stringResource(R.string.exercise_day_in_a_week_label), value = userInfo.exercise_amount.toString())
         Spacer(modifier = Modifier.height(8.dp))
-        ProfileInfoRow(label = "Time Frame", value = "${userInfo.time_frame} days")
+        ProfileInfoRow(label = stringResource(R.string.time_frame_label), value = "${userInfo.time_frame} days")
         Spacer(modifier = Modifier.height(8.dp))
 
         val calculatedIntake = formatCalculatedIntake(userInfo)

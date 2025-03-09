@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -127,7 +126,7 @@ fun BackgroundContent(
 
         AsyncImage(
             model = meal.image,
-            contentDescription = "Meat Food",
+            contentDescription = stringResource(R.string.meat_food),
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.TopStart),
@@ -146,18 +145,12 @@ fun BackgroundContent(
                 Icon(
                     modifier = Modifier.size(16.dp),
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close Icon",
+                    contentDescription = stringResource(R.string.close_icon),
                     tint = Color.White
                 )
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LineIndicatorExamplePreview() {
-    //LineIndicatorExample()
 }
 
 @Composable
@@ -185,13 +178,11 @@ fun PagerSampleItem(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StartPage(
     meal: MealInfo,
     pagerState: androidx.compose.foundation.pager.PagerState
 ) {
-
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -221,11 +212,11 @@ fun StartPage(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${meal.calorie} kcal",
+                    text = stringResource(R.string.kcal, meal.calorie),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "Calories",
+                    text = stringResource(R.string.calories),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -234,11 +225,11 @@ fun StartPage(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${meal.protein} g",
+                    text = stringResource(R.string.g, meal.protein),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "Protein",
+                    text = stringResource(R.string.protein),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -246,11 +237,11 @@ fun StartPage(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${meal.carbohydrate} g",
+                    text = stringResource(R.string.g, meal.carbohydrate),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "Carbs",
+                    text = stringResource(R.string.carbs),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -258,17 +249,15 @@ fun StartPage(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "${meal.fat} g",
+                    text = stringResource(R.string.g, meal.fat),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "Fat",
+                    text = stringResource(R.string.fat),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
         }
-
-
 
         Row(
             modifier = Modifier
@@ -277,11 +266,10 @@ fun StartPage(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Ingredients",
+                text = stringResource(R.string.ingredients),
                 style = MaterialTheme.typography.titleMedium,
             )
         }
-
 
         meal.ingredients.forEach {
             Row(
@@ -316,7 +304,7 @@ fun StartPage(
                     .fillMaxWidth(0.94f),
                 shape = RoundedCornerShape(100.dp),
             ) {
-                Text(text = "Start Cooking")
+                Text(text = stringResource(R.string.start_cooking))
             }
         }
     }
@@ -341,7 +329,7 @@ fun StepPage(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Step ${pagerState.currentPage}",
+            text = stringResource(R.string.step, pagerState.currentPage),
             style = MaterialTheme.typography.headlineLarge,
         )
 
@@ -397,7 +385,6 @@ fun StepPage(
 
                 Button(
                     onClick = {
-                        Log.d("Pager", "PagerStatePrevious: ${pagerState.pageCount}")
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage - 1)
                         }
@@ -410,12 +397,11 @@ fun StepPage(
                     ),
                     shape = RoundedCornerShape(100.dp),
                 ) {
-                    Text(text = "Previous")
+                    Text(text = stringResource(R.string.previous))
                 }
 
                 Button(
                     onClick = {
-                        Log.d("Pager", "PagerStateNext: ${pagerState.currentPage}")
                         coroutineScope.launch {
                             onFinishedClicked()
                         }
@@ -428,7 +414,7 @@ fun StepPage(
                     ),
                     shape = RoundedCornerShape(100.dp),
                 ) {
-                    Text(text = "Finish Cooking")
+                    Text(text = stringResource(R.string.finish_cooking))
                 }
             }
         } else {
@@ -440,7 +426,6 @@ fun StepPage(
             ) {
                 Button(
                     onClick = {
-                        Log.d("Pager", "PagerStatePrevious: ${pagerState.pageCount}")
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage - 1)
                         }
@@ -453,12 +438,11 @@ fun StepPage(
                     ),
                     shape = RoundedCornerShape(100.dp),
                 ) {
-                    Text(text = "Previous")
+                    Text(text = stringResource(R.string.previous))
                 }
 
                 Button(
                     onClick = {
-                        Log.d("Pager", "PagerStateNext: ${pagerState.currentPage}")
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         }
@@ -471,7 +455,7 @@ fun StepPage(
                     ),
                     shape = RoundedCornerShape(100.dp),
                 ) {
-                    Text(text = "Next")
+                    Text(text = stringResource(R.string.next))
                 }
             }
         }

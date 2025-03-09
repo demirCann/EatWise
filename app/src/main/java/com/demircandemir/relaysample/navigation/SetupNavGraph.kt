@@ -13,7 +13,6 @@ import com.demircandemir.relaysample.presentation.screens.favorites.FavoriteMeal
 import com.demircandemir.relaysample.presentation.screens.home.HomeScreen
 import com.demircandemir.relaysample.presentation.screens.login.SignInScreen
 import com.demircandemir.relaysample.presentation.screens.profile.ProfileScreen
-import com.demircandemir.relaysample.presentation.screens.progress.ProgressScreen
 import com.demircandemir.relaysample.presentation.screens.meals.MealsScreen
 import com.demircandemir.relaysample.presentation.screens.meals.dinner_meals.DinnerMealsScreen
 import com.demircandemir.relaysample.presentation.screens.meals.lunch_meals.LunchMealsScreen

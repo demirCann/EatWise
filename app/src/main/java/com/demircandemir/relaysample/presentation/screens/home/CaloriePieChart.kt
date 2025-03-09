@@ -23,8 +23,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.demircandemir.relaysample.R
 
 @Composable
 fun DonutChartBox(
@@ -67,7 +69,7 @@ fun DonutChartBox(
                     )
 
                     Text(
-                        text = "kcal left",
+                        text = stringResource(R.string.kcal_left),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -93,7 +95,7 @@ fun DonutChartBox(
                     )
 
                     Text(
-                        text = "kcal eaten",
+                        text = stringResource(R.string.kcal_eaten),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -105,7 +107,6 @@ fun DonutChartBox(
             IngredientsBar(
                 totalCarbohydrates, totalProteins, totalFats
             )
-
         }
     }
 }

@@ -113,12 +113,12 @@ fun LoginScreenContent(onSignInClick: () -> Unit) {
                     modifier = Modifier
                         .size(16.dp),
                     painter = painterResource(id = R.drawable.google_icon),
-                    contentDescription = "Google Icon",
+                    contentDescription = stringResource(R.string.google_icon),
                     tint = Color.White
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
 
-                Text(text = "Sign in with Google")
+                Text(text = stringResource(R.string.sign_in_with_google))
             }
         }
     }
