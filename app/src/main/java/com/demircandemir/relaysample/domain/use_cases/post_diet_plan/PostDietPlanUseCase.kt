@@ -1,15 +1,12 @@
 package com.demircandemir.relaysample.domain.use_cases.post_diet_plan
 
-import com.demircandemir.relaysample.data.repository.Repository
+import com.demircandemir.relaysample.data.repository.meal.MealRepository
 import javax.inject.Inject
 
 class PostDietPlanUseCase @Inject constructor(
-    private val repository: Repository
+    private val mealRepository: MealRepository
 ){
-
-
-
     operator fun invoke(userId: Int, repast: String, meals: String) {
-        repository.postDietPlan(userId, repast, meals)
+        mealRepository.postDietPlan(userId, repast, meals)
     }
 }

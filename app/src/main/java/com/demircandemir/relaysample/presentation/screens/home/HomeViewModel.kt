@@ -1,109 +1,112 @@
 package com.demircandemir.relaysample.presentation.screens.home
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.demircandemir.relaysample.R
-import com.demircandemir.relaysample.data.remote.EatWiseApi
-import com.demircandemir.relaysample.domain.model.MealInfo
+import com.demircandemir.relaysample.domain.model.DailyMealsItem
 import com.demircandemir.relaysample.domain.model.UserInfo
 import com.demircandemir.relaysample.domain.use_cases.UseCases
 import com.demircandemir.relaysample.navigation.Screens
-import com.demircandemir.relaysample.util.Constants.MEAL_ID_ARGUMENT_KEY
+import com.demircandemir.relaysample.util.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class HomeUiState(
+    val meals: List<DailyMealsItem> = emptyList(),
+    val totalCalories: Int = 0,
+    val totalCarbohydrates: Int = 0,
+    val totalProteins: Int = 0,
+    val totalFats: Int = 0,
+    val userInfo: UserInfo = UserInfo(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCases: UseCases,
-    private val eatWiseApi: EatWiseApi,
-    savedStateHandle: SavedStateHandle
-): ViewModel() {
+    private val useCases: UseCases
+) : ViewModel() {
 
-
-
-    private val _meals = MutableStateFlow<List<MealAddRow>>(emptyList())
-    val meals: StateFlow<List<MealAddRow>> = _meals
-
-
-    private val _totalCalories = MutableStateFlow(0)
-    val totalCalories: StateFlow<Int> = _totalCalories
-
-    private val _totalCarbohydrates = MutableStateFlow(0)
-    val totalCarbohydrates: StateFlow<Int> = _totalCarbohydrates
-
-    private val _totalProteins = MutableStateFlow(0)
-    val totalProteins: StateFlow<Int> = _totalProteins
-
-    private val _totalFats = MutableStateFlow(0)
-    val totalFats: StateFlow<Int> = _totalFats
-
-
-
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
         fetchMeals()
         getUserInfo()
     }
 
-    fun fetchMeals() {
+    private fun fetchMeals() {
         viewModelScope.launch {
-            try {
-                val breakfastResponse = eatWiseApi.getDietPlan(1, "breakfast")
-                val lunchResponse = eatWiseApi.getDietPlan(1, "lunch")
-                val dinnerResponse = eatWiseApi.getDietPlan(1, "dinner")
-                val snacksResponse = eatWiseApi.getDietPlan(1, "snack")
-
-                _meals.value = listOf(
-                    MealAddRow(
-                        name = "Breakfast",
-                        recommendedCalorie = "820 - 1093 kcal",
-                        imageRes = R.drawable.breakfast_icon,
-                        route = Screens.BreakfastMeals.route,
-                        meals = breakfastResponse.meals
-                    ),
-                    MealAddRow(
-                        name = "Lunch",
-                        recommendedCalorie = "820 - 1093 kcal",
-                        imageRes = R.drawable.lunch_icon,
-                        route = Screens.LunchMeals.route,
-                        meals = lunchResponse.meals
-                    ),
-                    MealAddRow(
-                        name = "Dinner",
-                        recommendedCalorie = "820 - 1093 kcal",
-                        imageRes = R.drawable.dinner_icon,
-                        route = Screens.DinnerMeals.route,
-                        meals = dinnerResponse.meals
-                    ),
-                    MealAddRow(
-                        name = "Snack",
-                        recommendedCalorie = "820 - 1093 kcal",
-                        imageRes = R.drawable.snacks_icon,
-                        route = Screens.SnacksMeals.route,
-                        meals = snacksResponse.meals
-                    ),
-                )
-
-                calculateTotals(_meals.value)
-
-
-            } catch (e: Exception) {
-                Log.d("HomeViewModel", "fetchMeals: Error: $e")
+            useCases.getDailyMealsUseCase(1).collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        result.data?.let { dailyMeals ->
+                            val meals = listOf(
+                                DailyMealsItem(
+                                    name = "Breakfast",
+                                    recommendedCalorie = "820 - 1093 kcal",
+                                    imageRes = R.drawable.breakfast_icon,
+                                    route = Screens.BreakfastMeals.route,
+                                    meals = dailyMeals.breakfast.meals
+                                ),
+                                DailyMealsItem(
+                                    name = "Lunch",
+                                    recommendedCalorie = "820 - 1093 kcal",
+                                    imageRes = R.drawable.lunch_icon,
+                                    route = Screens.LunchMeals.route,
+                                    meals = dailyMeals.lunch.meals
+                                ),
+                                DailyMealsItem(
+                                    name = "Dinner",
+                                    recommendedCalorie = "820 - 1093 kcal",
+                                    imageRes = R.drawable.dinner_icon,
+                                    route = Screens.DinnerMeals.route,
+                                    meals = dailyMeals.dinner.meals
+                                ),
+                                DailyMealsItem(
+                                    name = "Snack",
+                                    recommendedCalorie = "820 - 1093 kcal",
+                                    imageRes = R.drawable.snacks_icon,
+                                    route = Screens.SnacksMeals.route,
+                                    meals = dailyMeals.snacks.meals
+                                ),
+                            )
+                            calculateTotals(meals)
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    meals = meals,
+                                    isLoading = false,
+                                    error = null
+                                )
+                            }
+                        }
+                    }
+                    is ApiResult.Error -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                error = result.message
+                            )
+                        }
+                    }
+                    is ApiResult.Loading -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isLoading = true,
+                                error = null
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 
-
-
-    private fun calculateTotals(meals: List<MealAddRow>) {
+    private fun calculateTotals(meals: List<DailyMealsItem>) {
         var calories = 0
         var carbohydrates = 0
         var proteins = 0
@@ -118,40 +121,50 @@ class HomeViewModel @Inject constructor(
             }
         }
 
-        _totalCalories.value = calories
-        _totalCarbohydrates.value = carbohydrates
-        _totalProteins.value = proteins
-        _totalFats.value = fats
-    }
-
-    private var _userInfo = MutableStateFlow(
-        UserInfo(
-        user_id = "",
-        name = "",
-        goal = "",
-        weight = 0,
-        height = 0,
-        age = 0,
-        gender = "",
-        BMR = 0.0,
-        calculated_intake = 0.0,
-        exercise_amount = 0,
-        weight_goal = 0,
-        time_frame = 0,
-        diet_type = ""
-    )
-    )
-    val userInfo: StateFlow<UserInfo> = _userInfo
-
-
-
-    fun getUserInfo() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _userInfo.value = useCases.getUserInfoUseCase()
+        _uiState.update { currentState ->
+            currentState.copy(
+                totalCalories = calories,
+                totalCarbohydrates = carbohydrates,
+                totalProteins = proteins,
+                totalFats = fats
+            )
         }
     }
 
-
-
-
+    private fun getUserInfo() {
+        viewModelScope.launch {
+            useCases.getUserInfoFromRemoteUseCase().collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        result.data?.let { userInfo ->
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    userInfo = userInfo,
+                                    isLoading = false,
+                                    error = null
+                                )
+                            }
+                        }
+                    }
+                    is ApiResult.Error -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                userInfo = UserInfo(),
+                                isLoading = false,
+                                error = result.message
+                            )
+                        }
+                    }
+                    is ApiResult.Loading -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isLoading = true,
+                                error = null
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,26 +21,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-
 
 @Composable
 fun DonutChartBox(
     totalCalorieIntake: Int,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val totalCalories by viewModel.totalCalories.collectAsState()
-    val totalCarbohydrates by viewModel.totalCarbohydrates.collectAsState()
-    val totalProteins by viewModel.totalProteins.collectAsState()
-    val totalFats by viewModel.totalFats.collectAsState()
 
-
-
-    val percentageValue = ((totalCalories.toFloat() / totalCalorieIntake.toFloat()) * 100).toInt()
+    val uiState by viewModel.uiState.collectAsState()
+    val totalCalories = uiState.totalCalories
+    val totalCarbohydrates = uiState.totalCarbohydrates
+    val totalProteins = uiState.totalProteins
+    val totalFats = uiState.totalFats
 
     Box(
         modifier = Modifier
@@ -114,7 +109,6 @@ fun DonutChartBox(
         }
     }
 }
-
 
 @Composable
 fun DonutChart(

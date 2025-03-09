@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
+    onChatIconClicked: () -> Unit,
     onProfileImageClicked: () -> Unit
 ) {
 
@@ -44,6 +46,15 @@ fun HomeTopBar(
             )
         },
         actions = {
+            IconButton(
+                onClick = onChatIconClicked
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_chat),
+                    contentDescription = stringResource(R.string.topappbar_profile_image)
+                )
+            }
+
             ProfileImage {
                 onProfileImageClicked()
             }

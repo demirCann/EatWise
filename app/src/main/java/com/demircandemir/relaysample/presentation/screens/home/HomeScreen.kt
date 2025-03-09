@@ -1,31 +1,19 @@
 package com.demircandemir.relaysample.presentation.screens.home
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.demircandemir.relaysample.navigation.Screens
-import com.demircandemir.relaysample.navigation.bottomBarNavigation.BottomBarScreenItem
-
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
@@ -34,15 +22,14 @@ fun HomeScreen(
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchMeals()
-    }
+    val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             HomeTopBar(
+                onChatIconClicked = {
+                    navController.navigate(Screens.Chat.route)
+                },
                 onProfileImageClicked = {
                     navController.navigate(Screens.Profile.route) {
                         popUpTo(Screens.Profile.route) {
@@ -54,68 +41,16 @@ fun HomeScreen(
         },
         content = { paddingValues ->
             HomeContent(
+                dailyMealsItemList = homeUiState.meals,
+                userInfo = homeUiState.userInfo,
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(bottom = 40.dp)
                     .verticalScroll(rememberScrollState()),
-                navController = navController
+                onDailyMealRowClicked = {
+                    navController.navigate(Screens.FoodSelection.passRepast(it.name))
+                }
             )
         }
     )
-
 }
-
-@Composable
-fun BottomBar(
-    navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
-) {
-    val screens = listOf(
-        BottomBarScreenItem.Home,
-        BottomBarScreenItem.Meals,
-        BottomBarScreenItem.Chat
-    )
-
-    AnimatedVisibility(
-        visible = bottomBarState.value,
-    ) {
-        NavigationBar(
-            containerColor = MaterialTheme.colorScheme.surface
-        ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState() // Shows top element of the back stack and it will recompose if the navController.navigate or navController.popBackStack is called
-            val currentRoute = navBackStackEntry?.destination?.route
-
-            screens.forEach { screen ->
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = if (currentRoute == screen.route) painterResource(id = screen.selectedIcon) else painterResource(id = screen.unselectedIcon),
-                            contentDescription = screen.title
-                        )
-                    },
-                    label = { Text(text = screen.title) },
-                    selected = currentRoute == screen.route,
-                    onClick = {
-                        navController.navigate(screen.route) {
-                            navController.graph.startDestinationRoute?.let { route ->
-                                popUpTo(route) {
-                                    saveState = true
-                                }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
-            }
-        }
-    }
-}
-
-
-
-
-
-
-
-
