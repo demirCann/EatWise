@@ -22,24 +22,18 @@ class SearchViewModel @Inject constructor(
     private val _searchQuery = mutableStateOf("")
     val searchQuery = _searchQuery
 
-
     private val _searchedMeals = MutableStateFlow<PagingData<MealInfo>>(PagingData.empty())
     val searchedMeals = _searchedMeals.asStateFlow()
-
-
-
 
     fun updateSearchQuery(newQuery: String) {
         _searchQuery.value = newQuery
     }
 
-
     fun searchMeals(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            useCases.searchMealsUseCase(name = query).cachedIn(viewModelScope).collect{
+            useCases.searchMealsUseCase(query = query).cachedIn(viewModelScope).collect{
                 _searchedMeals.value = it
             }
         }
     }
-
 }
