@@ -1,22 +1,47 @@
 package com.demircandemir.relaysample.presentation.screens.survey
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.demircandemir.relaysample.domain.model.UserInfo
+import com.demircandemir.relaysample.data.repository.firebase.FirebaseRepository
+import com.demircandemir.relaysample.domain.model.FirebaseUserData
 import com.demircandemir.relaysample.domain.use_cases.UseCases
 import com.demircandemir.relaysample.presentation.screens.survey.question.ChoiceItem
+import com.demircandemir.relaysample.util.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class SurveyUiState(
+    val isSurveyDone: Boolean? = null,
+    val goalResponse: ChoiceItem? = null,
+    val genderResponse: ChoiceItem? = null,
+    val ageResponse: String = "",
+    val weightResponse: String = "",
+    val heightResponse: String = "",
+    val exerciseResponse: String = "",
+    val weightGoalResponse: String = "",
+    val timeFrameResponse: String = "",
+    val dietTypeResponse: ChoiceItem? = null,
+    val questionIndex: Int = 0,
+    val isNextEnabled: Boolean = false,
+    val surveyScreenData: SurveyScreenData? = null,
+    val firebaseUserData: FirebaseUserData? = null,
+    val error: String? = null,
+    val isLoading: Boolean = false
+)
 
 @HiltViewModel
 class SurveyViewModel @Inject constructor(
-    private val useCases: UseCases
+    private val useCases: UseCases,
+    private val firebaseRepository: FirebaseRepository
 ): ViewModel() {
 
+    private val _surveyUiState = MutableStateFlow(SurveyUiState())
+    val surveyUiState = _surveyUiState.asStateFlow()
 
     private val questionOrder: List<SurveyQuestion> = listOf(
         SurveyQuestion.GOAL,
@@ -30,80 +55,38 @@ class SurveyViewModel @Inject constructor(
         SurveyQuestion.DIET_TYPE
     )
 
-    private var questionIndex = 0
-
-    // ----- Responses exposed as State -----
-
-    private val _goalResponse = mutableStateOf<ChoiceItem?>(null)
-    val goalResponse: ChoiceItem?
-        get() = _goalResponse.value
-
-    private val _genderResponse = mutableStateOf<ChoiceItem?>(null)
-    val genderResponse: ChoiceItem?
-        get() = _genderResponse.value
-
-    private val _ageResponse = mutableStateOf("")
-    val ageResponse: String
-        get() = _ageResponse.value
-
-    private val _weightResponse = mutableStateOf("")
-    val weightResponse: String
-        get() = _weightResponse.value
-
-    private val _heightResponse = mutableStateOf("")
-    val heightResponse: String
-        get() = _heightResponse.value
-
-    private val _exerciseResponse = mutableStateOf("")
-    val exerciseResponse: String
-        get() = _exerciseResponse.value
-
-    private val _weightGoalResponse = mutableStateOf("")
-    val weightGoalResponse: String
-        get() = _weightGoalResponse.value
-
-    private val _timeFrameResponse = mutableStateOf("")
-    val timeFrameResponse: String
-        get() = _timeFrameResponse.value
-
-    private val _dietTypeResponse = mutableStateOf<ChoiceItem?>(null)
-    val dietTypeResponse: ChoiceItem?
-        get() = _dietTypeResponse.value
-
-
-    // ----- Survey status exposed as State -----
-
-    private val _surveyScreenData = mutableStateOf(createSurveyScreenData())
-    val surveyScreenData: SurveyScreenData?
-        get() = _surveyScreenData.value
-
-    private val _isNextEnabled = mutableStateOf(false)
-    val isNextEnabled: Boolean
-        get() = _isNextEnabled.value
+    init {
+        updateSurveyScreenData()
+        getSignedInUser()
+    }
 
     fun onBackPressed(): Boolean {
-        if (questionIndex == 0) {
+        if (_surveyUiState.value.questionIndex == 0) {
             return false
         }
-        changeQuestion(questionIndex - 1)
+        changeQuestion(_surveyUiState.value.questionIndex - 1)
         return true
     }
 
     fun onPreviousPressed() {
-        check (questionIndex == 0) {
+        check (_surveyUiState.value.questionIndex == 0) {
             throw IllegalStateException("onPreviousPressed when on question 0")
         }
-        changeQuestion(questionIndex - 1)
+        changeQuestion(_surveyUiState.value.questionIndex - 1)
     }
 
     fun onNextPressed() {
-        changeQuestion(questionIndex + 1)
+        changeQuestion(_surveyUiState.value.questionIndex + 1)
     }
 
     private fun changeQuestion(newQuestionIndex: Int) {
-        questionIndex = newQuestionIndex
-        _isNextEnabled.value = getIsNextEnabled()
-        _surveyScreenData.value = createSurveyScreenData()
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                questionIndex = newQuestionIndex,
+                isNextEnabled = getIsNextEnabled(currentState.copy(questionIndex = newQuestionIndex))
+            )
+        }
+        updateSurveyScreenData()
     }
 
     fun onDonePressed(onSurveyComplete: () -> Unit) {
@@ -111,78 +94,113 @@ class SurveyViewModel @Inject constructor(
     }
 
     fun onGoalResponse(goal: ChoiceItem) {
-        _goalResponse.value = goal
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onGenderResponse(gender: ChoiceItem) {
-        _genderResponse.value = gender
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onAgeResponse(age: String) {
-        _ageResponse.value = age
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onWeightResponse(weight: String) {
-        _weightResponse.value = weight
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onHeightResponse(height: String) {
-        _heightResponse.value = height
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onExerciseResponse(exercise: String) {
-        _exerciseResponse.value = exercise
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onWeightGoalResponse(weightGoal: String) {
-        _weightGoalResponse.value = weightGoal
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onTimeFrameResponse(timeFrame: String) {
-        _timeFrameResponse.value = timeFrame
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-    fun onDietTypeResponse(dietType: ChoiceItem) {
-        _dietTypeResponse.value = dietType
-        _isNextEnabled.value = getIsNextEnabled()
-    }
-
-
-
-
-    private fun getIsNextEnabled(): Boolean {
-        return when(questionOrder[questionIndex]) {
-            SurveyQuestion.GOAL -> _goalResponse.value != null
-            SurveyQuestion.GENDER -> _genderResponse.value != null
-            SurveyQuestion.AGE -> _ageResponse.value != ""
-            SurveyQuestion.WEIGHT -> _weightResponse.value != ""
-            SurveyQuestion.HEIGHT -> _heightResponse.value != ""
-            SurveyQuestion.EXERCISE -> _exerciseResponse.value != ""
-            SurveyQuestion.WEIGHT_GOAL -> _weightGoalResponse.value != ""
-            SurveyQuestion.TIME_FRAME -> _timeFrameResponse.value != ""
-            SurveyQuestion.DIET_TYPE -> _dietTypeResponse.value != null
-
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                goalResponse = goal,
+                isNextEnabled = getIsNextEnabled(currentState.copy(goalResponse = goal))
+            )
         }
     }
 
-    private fun createSurveyScreenData(): SurveyScreenData {
-        return SurveyScreenData(
-            questionIndex = questionIndex,
-            questionCount = questionOrder.size,
-            shouldShowPreviousButton = questionIndex > 0,
-            shouldShowDoneButton = questionIndex == questionOrder.size - 1,
-            surveyQuestion = questionOrder[questionIndex]
-        )
+    fun onGenderResponse(gender: ChoiceItem) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                genderResponse = gender,
+                isNextEnabled = getIsNextEnabled(currentState.copy(genderResponse = gender))
+            )
+        }
     }
 
+    fun onAgeResponse(age: String) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                ageResponse = age,
+                isNextEnabled = getIsNextEnabled(currentState.copy(ageResponse = age))
+            )
+        }
+    }
+
+    fun onWeightResponse(weight: String) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                weightResponse = weight,
+                isNextEnabled = getIsNextEnabled(currentState.copy(weightResponse = weight))
+            )
+        }
+    }
+
+    fun onHeightResponse(height: String) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                heightResponse = height,
+                isNextEnabled = getIsNextEnabled(currentState.copy(heightResponse = height))
+            )
+        }
+    }
+
+    fun onExerciseResponse(exercise: String) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                exerciseResponse = exercise,
+                isNextEnabled = getIsNextEnabled(currentState.copy(exerciseResponse = exercise))
+            )
+        }
+    }
+
+    fun onWeightGoalResponse(weightGoal: String) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                weightGoalResponse = weightGoal,
+                isNextEnabled = getIsNextEnabled(currentState.copy(weightGoalResponse = weightGoal))
+            )
+        }
+    }
+
+    fun onTimeFrameResponse(timeFrame: String) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                timeFrameResponse = timeFrame,
+                isNextEnabled = getIsNextEnabled(currentState.copy(timeFrameResponse = timeFrame))
+            )
+        }
+    }
+
+    fun onDietTypeResponse(dietType: ChoiceItem) {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                dietTypeResponse = dietType,
+                isNextEnabled = getIsNextEnabled(currentState.copy(dietTypeResponse = dietType))
+            )
+        }
+    }
+
+    private fun getIsNextEnabled(state: SurveyUiState): Boolean {
+        return when(questionOrder[state.questionIndex]) {
+            SurveyQuestion.GOAL -> state.goalResponse != null
+            SurveyQuestion.GENDER -> state.genderResponse != null
+            SurveyQuestion.AGE -> state.ageResponse != ""
+            SurveyQuestion.WEIGHT -> state.weightResponse != ""
+            SurveyQuestion.HEIGHT -> state.heightResponse != ""
+            SurveyQuestion.EXERCISE -> state.exerciseResponse != ""
+            SurveyQuestion.WEIGHT_GOAL -> state.weightGoalResponse != ""
+            SurveyQuestion.TIME_FRAME -> state.timeFrameResponse != ""
+            SurveyQuestion.DIET_TYPE -> state.dietTypeResponse != null
+        }
+    }
+
+    private fun updateSurveyScreenData() {
+        _surveyUiState.update { currentState ->
+            currentState.copy(
+                surveyScreenData = SurveyScreenData(
+                    questionIndex = currentState.questionIndex,
+                    questionCount = questionOrder.size,
+                    shouldShowPreviousButton = currentState.questionIndex > 0,
+                    shouldShowDoneButton = currentState.questionIndex == questionOrder.size - 1,
+                    surveyQuestion = questionOrder[currentState.questionIndex]
+                )
+            )
+        }
+    }
 
     fun saveUserInfo(
         id: Int,
@@ -199,7 +217,7 @@ class SurveyViewModel @Inject constructor(
         diet_type: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            useCases.postUserInfoUseCase(
+            useCases.postUserInfoToRemoteUseCase(
                 id = id,
                 name = name,
                 image = image,
@@ -216,16 +234,34 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
+    fun saveSurveyState(completed: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            useCases.saveSurveyUseCase(completed)
+        }
+    }
 
-
-
-
-
+    private fun getSignedInUser() {
+        viewModelScope.launch {
+            _surveyUiState.update { currentState ->
+                when (val firebaseUserData = firebaseRepository.getSignedInUser()) {
+                    is ApiResult.Success -> {
+                        currentState.copy(
+                            firebaseUserData = firebaseUserData.data
+                        )
+                    }
+                    is ApiResult.Error -> {
+                        currentState.copy(
+                            error = firebaseUserData.message ?: "An error occurred"
+                        )
+                    }
+                    is ApiResult.Loading -> {
+                        currentState.copy(isLoading = true)
+                    }
+                }
+            }
+        }
+    }
 }
-
-
-
-
 
 enum class SurveyQuestion {
     GOAL,

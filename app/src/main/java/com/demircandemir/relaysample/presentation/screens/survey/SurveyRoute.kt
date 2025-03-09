@@ -1,6 +1,5 @@
 package com.demircandemir.relaysample.presentation.screens.survey
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -9,19 +8,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.demircandemir.relaysample.domain.model.UserInfo
-import com.google.firebase.auth.FirebaseAuth
-
-
-private const val CONTENT_ANIMATION_DURATION = 300
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.demircandemir.relaysample.util.Constants.SURVEY_CONTENT_ANIMATION_DURATION
 
 @Composable
 fun SurveyRoute(
@@ -29,42 +20,20 @@ fun SurveyRoute(
     onNavUp: () -> Unit,
     viewModel: SurveyViewModel = hiltViewModel()
 ) {
-
-    val surveyScreenData = viewModel.surveyScreenData ?: return
-
-
-    var id by remember { mutableStateOf("") }
-    id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-    var name by remember { mutableStateOf("") }
-    name = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
-    var image by remember { mutableStateOf("") }
-    image = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
-    var goal by remember { mutableStateOf("") }
-    goal = viewModel.goalResponse?.let { it1 -> stringResource(id = it1.stringResourceId) }
-        .toString()
-    Log.d("SurveyRoute", "Goal: $goal")
-    var weight by remember { mutableStateOf("") }
-    weight = viewModel.weightResponse
-    var height by remember { mutableStateOf("") }
-    height = viewModel.heightResponse
-    var age by remember { mutableStateOf("") }
-    age = viewModel.ageResponse
-    var gender by remember { mutableStateOf("") }
-    gender = viewModel.genderResponse?.stringResourceId?.let { it1 -> stringResource(id = it1) }
-        .toString()
-    var bmr by remember { mutableStateOf("") }
-    bmr = 13459981237213.toString()
-    var exerciseDayInAWeek by remember { mutableStateOf("") }
-    exerciseDayInAWeek = viewModel.exerciseResponse
-
-    var weightGoal by remember { mutableStateOf("") }
-    weightGoal = viewModel.weightGoalResponse
-    var timeFrame by remember { mutableStateOf("") }
-    timeFrame = viewModel.timeFrameResponse
-    var dietType by remember { mutableStateOf("") }
-    dietType = viewModel.dietTypeResponse?.let { it1 -> stringResource(id = it1.stringResourceId) }
-        .toString()
-
+    val uiState by viewModel.surveyUiState.collectAsStateWithLifecycle()
+    val surveyScreenData = uiState.surveyScreenData ?: return
+    val currentUserInfo = uiState.firebaseUserData
+    val name = currentUserInfo?.userName ?: ""
+    val image = currentUserInfo?.profilePictureUrl ?: ""
+    val goal = uiState.goalResponse?.let { stringResource(id = it.stringResourceId) } ?: ""
+    val weight = uiState.weightResponse
+    val height = uiState.heightResponse
+    val age = uiState.ageResponse
+    val gender = uiState.genderResponse?.let { stringResource(id = it.stringResourceId) } ?: ""
+    val exerciseDayInAWeek = uiState.exerciseResponse
+    val weightGoal = uiState.weightGoalResponse
+    val timeFrame = uiState.timeFrameResponse
+    val dietType = uiState.dietTypeResponse?.let { stringResource(id = it.stringResourceId) } ?: ""
 
     BackHandler {
         if (!viewModel.onBackPressed()) {
@@ -72,10 +41,9 @@ fun SurveyRoute(
         }
     }
 
-
     SurveyQuestionsScreen(
         surveyScreenData = surveyScreenData,
-        isNextEnabled = viewModel.isNextEnabled,
+        isNextEnabled = uiState.isNextEnabled,
         onClosePressed = { onNavUp() },
         onPreviousPressed = { viewModel.onPreviousPressed() },
         onNextPressed = { viewModel.onNextPressed() },
@@ -95,13 +63,13 @@ fun SurveyRoute(
                 timeFrame = timeFrame,
                 diet_type = dietType
             )
+            viewModel.saveSurveyState(true)
         }
     ) {
-
         AnimatedContent(
             targetState = surveyScreenData,
             transitionSpec = {
-                val animationSpec: TweenSpec<IntOffset> = tween(CONTENT_ANIMATION_DURATION)
+                val animationSpec: TweenSpec<IntOffset> = tween(SURVEY_CONTENT_ANIMATION_DURATION)
                 val direction = getTransitionDirection(
                     initialIndex = initialState.questionIndex,
                     targetIndex = targetState.questionIndex
@@ -119,95 +87,71 @@ fun SurveyRoute(
         ) { targetState ->
             when (targetState.surveyQuestion) {
                 SurveyQuestion.GOAL -> {
-                    GoalQuestion(selectedAnswer = viewModel.goalResponse, onOptionsSelected = viewModel::onGoalResponse)
+                    GoalQuestion(
+                        selectedAnswer = uiState.goalResponse,
+                        onOptionsSelected = viewModel::onGoalResponse
+                    )
                 }
-
                 SurveyQuestion.GENDER -> {
-                    GenderQuestion(selectedAnswer = viewModel.genderResponse, onOptionsSelected = viewModel::onGenderResponse)
-//                    gender = viewModel.genderResponse?.stringResourceId?.let { it1 -> stringResource(id = it1) }
-//                        .toString()
+                    GenderQuestion(
+                        selectedAnswer = uiState.genderResponse,
+                        onOptionsSelected = viewModel::onGenderResponse
+                    )
                 }
-
                 SurveyQuestion.AGE -> {
                     BirthDayQuestion(
-                            text = viewModel.ageResponse,
-                            onTextChange = viewModel::onAgeResponse
-                        )
-//                    age = viewModel.ageResponse
-//                    Log.d("SurveyRoute","Age: ${viewModel.ageResponse}")
+                        text = uiState.ageResponse,
+                        onTextChange = viewModel::onAgeResponse
+                    )
                 }
-
                 SurveyQuestion.WEIGHT -> {
                     WeightQuestion(
-                        text = viewModel.weightResponse,
+                        text = uiState.weightResponse,
                         onTextChange = viewModel::onWeightResponse
                     )
                 }
-
                 SurveyQuestion.HEIGHT -> {
                     HeightQuestion(
-                        text = viewModel.heightResponse,
+                        text = uiState.heightResponse,
                         onTextChange = viewModel::onHeightResponse
                     )
                 }
-
                 SurveyQuestion.EXERCISE -> {
                     ExerciseQuestion(
-                        text = viewModel.exerciseResponse,
+                        text = uiState.exerciseResponse,
                         onTextChange = viewModel::onExerciseResponse
                     )
-
                 }
-
                 SurveyQuestion.WEIGHT_GOAL -> {
                     WeightGoalQuestion(
-                        text = viewModel.weightGoalResponse,
+                        text = uiState.weightGoalResponse,
                         onTextChange = viewModel::onWeightGoalResponse
                     )
                 }
-
                 SurveyQuestion.TIME_FRAME -> {
                     TimeFrameQuestion(
-                        text = viewModel.timeFrameResponse,
+                        text = uiState.timeFrameResponse,
                         onTextChange = viewModel::onTimeFrameResponse
                     )
                 }
-
                 SurveyQuestion.DIET_TYPE -> {
                     DietTypeQuestion(
-                        selectedAnswer = viewModel.dietTypeResponse,
+                        selectedAnswer = uiState.dietTypeResponse,
                         onOptionsSelected = viewModel::onDietTypeResponse
                     )
                 }
-
             }
         }
     }
-
-
-
-
-
-
-
-
 }
-
 
 private fun getTransitionDirection(
     initialIndex: Int,
     targetIndex: Int
 ): AnimatedContentTransitionScope.SlideDirection {
     return if (targetIndex > initialIndex) {
-        // Going forwards in the survey: Set the initial offset to start
-        // at the size of the content so it slides in from right to left, and
-        // slides out from the left of the screen to -fullWidth
         AnimatedContentTransitionScope.SlideDirection.Left
     } else {
-        // Going back to the previous question in the set, we do the same
-        // transition as above, but with different offsets - the inverse of
-        // above, negative fullWidth to enter, and fullWidth to exit.
         AnimatedContentTransitionScope.SlideDirection.Right
     }
 }
-
