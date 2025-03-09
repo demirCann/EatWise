@@ -1,4 +1,4 @@
-package com.demircandemir.relaysample.data.repository
+package com.demircandemir.relaysample.data.datasource.data_store
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.demircandemir.relaysample.domain.repositories.DataStoreOperations
 import com.demircandemir.relaysample.util.Constants.PREFERENCES_KEY
 import com.demircandemir.relaysample.util.Constants.PREFERENCES_NAME
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PREFERENCES_NAME)
 
-class DataStoreOperationsImpl(context: Context): DataStoreOperations {
+class DataStoreSourceImpl(context: Context): DataStoreSource {
 
     private object PreferenceKeys {
         val surveyKey = booleanPreferencesKey(name = PREFERENCES_KEY)

@@ -1,6 +1,5 @@
-package com.demircandemir.relaysample.data.paging_source
+package com.demircandemir.relaysample.data.datasource.paging
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -32,7 +31,6 @@ class MealRemoteMediator @Inject constructor(
         } else {
             InitializeAction.LAUNCH_INITIAL_REFRESH
         }
-
     }
 
     override suspend fun load(
@@ -62,38 +60,43 @@ class MealRemoteMediator @Inject constructor(
                     nextPage
                 }
             }
+
             val response = eatWiseApi.getAllMeals(page = page)
-            if (response.meals.isNotEmpty()) {
-                eatWiseDatabase.withTransaction {
-                    if (loadType == LoadType.REFRESH) {
-                        mealDao.deleteAllMeals()
-                        mealRemoteKeysDao.deleteAllRemoteKeys()
+            
+            if (response.isSuccessful) {
+                val mealListResponse = response.body()
+                if (mealListResponse != null && mealListResponse.meals.isNotEmpty()) {
+                    eatWiseDatabase.withTransaction {
+                        if (loadType == LoadType.REFRESH) {
+                            mealDao.deleteAllMeals()
+                            mealRemoteKeysDao.deleteAllRemoteKeys()
+                        }
+                        val prevPage = mealListResponse.prevPage
+                        val nextPage = mealListResponse.nextPage
+                        val keys = mealListResponse.meals.map { meal ->
+                            MealRemoteKeys(
+                                id = meal.id,
+                                prevPage = prevPage,
+                                nextPage = nextPage,
+                                lastUpdated = mealListResponse.lastUpdated
+                            )
+                        }
+                        mealRemoteKeysDao.addAllRemoteKeys(mealRemoteKeys = keys)
+                        mealDao.addMeals(meals = mealListResponse.meals)
                     }
-                    val prevPage = response.prevPage
-                    val nextPage = response.nextPage
-                    val keys = response.meals.map { meal ->
-                        MealRemoteKeys(
-                            id = meal.id,
-                            prevPage = prevPage,
-                            nextPage = nextPage,
-                            lastUpdated = response.lastUpdated
-                        )
-                    }
-                    mealRemoteKeysDao.addAllRemoteKeys(mealRemoteKeys = keys)
-                    mealDao.addMeals(meals = response.meals)
                 }
+                MediatorResult.Success(endOfPaginationReached = mealListResponse?.nextPage == null)
+            } else {
+                MediatorResult.Error(Exception("API call failed with code: ${response.code()}"))
             }
-            MediatorResult.Success(endOfPaginationReached = response.nextPage == null)
         } catch (e: Exception) {
             return MediatorResult.Error(e)
         }
     }
 
-
     private suspend fun getRemoteKeyClosestCurrentPosition(
         state: PagingState<Int, MealInfo>
     ): MealRemoteKeys? {
-        Log.d("PageNumber", "refresh")
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
                 mealRemoteKeysDao.getRemoteKeys(id = id)
@@ -101,11 +104,9 @@ class MealRemoteMediator @Inject constructor(
         }
     }
 
-
     private suspend fun getRemoteKeyForFirstItem(
         state: PagingState<Int, MealInfo>
     ): MealRemoteKeys? {
-        Log.d("PageNumber", "prepend")
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { hero ->
                 mealRemoteKeysDao.getRemoteKeys(id = hero.id)
@@ -115,15 +116,9 @@ class MealRemoteMediator @Inject constructor(
     private suspend fun getRemoteKeyForLastItem(
         state: PagingState<Int, MealInfo>
     ): MealRemoteKeys? {
-        Log.d("PageNumber", "append")
         return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { hero ->
                 mealRemoteKeysDao.getRemoteKeys(id = hero.id)
             }
     }
-
-
 }
-
-
-

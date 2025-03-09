@@ -1,7 +1,6 @@
-package com.demircandemir.relaysample.domain.repositories
+package com.demircandemir.relaysample.data.datasource.local
 
 import com.demircandemir.relaysample.domain.model.MealInfo
-import com.demircandemir.relaysample.domain.model.UserInfo
 
 interface LocalDataSource {
 

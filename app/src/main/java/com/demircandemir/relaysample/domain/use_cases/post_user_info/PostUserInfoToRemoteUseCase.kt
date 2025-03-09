@@ -1,10 +1,10 @@
 package com.demircandemir.relaysample.domain.use_cases.post_user_info
 
-import com.demircandemir.relaysample.data.repository.Repository
-import com.demircandemir.relaysample.domain.model.UserInfo
+import com.demircandemir.relaysample.data.repository.firebase.FirebaseRepository
+import javax.inject.Inject
 
-class PostUserInfoUseCase(
-    private val repository: Repository
+class PostUserInfoToRemoteUseCase @Inject constructor(
+    private val firebaseRepository: FirebaseRepository
 ) {
     suspend operator fun invoke(
         id: Int,
@@ -20,7 +20,7 @@ class PostUserInfoUseCase(
         timeFrame: String,
         diet_type: String
     ) {
-        repository.postUserInfo(
+        firebaseRepository.postUserInfoToRemote(
             id = id,
             name = name,
             image = image,
