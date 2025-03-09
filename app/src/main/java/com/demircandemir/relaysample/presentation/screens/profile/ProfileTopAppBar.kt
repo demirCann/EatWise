@@ -26,13 +26,12 @@ fun ProfileTopAppBar(
             }
         },
         actions = {
-//            SettingsButton {
-//                onSettingsClicked()
-//            }
+            SettingsButton {
+                onSettingsClicked()
+            }
         }
     )
 }
-
 
 @Composable
 fun NavigationIconFun(
@@ -45,8 +44,6 @@ fun NavigationIconFun(
         )
     }
 }
-
-
 
 @Composable
 fun SettingsButton(
