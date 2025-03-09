@@ -1,10 +1,13 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.relay") version "0.3.09"
-    id ("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
-    id("kotlinx-serialization")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
+    id("androidx.navigation.safeargs")
+    id("kotlin-kapt")
     id("com.google.gms.google-services")
 }
 
@@ -14,145 +17,105 @@ android {
 
     defaultConfig {
         applicationId = "com.demircandemir.relaysample"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+
+//        val properties = gradleLocalProperties(rootDir, providers)
+//        buildConfigField("String", "GEMINI_API_KEY", "\"${properties.getProperty("GEMINI_API_KEY")}\"")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+    
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "17"
     }
+    
     buildFeatures {
         compose = true
+        buildConfig = true
     }
+    
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 }
 
 dependencies {
+    // Core
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.activity.compose)
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.datastore.preferences)
 
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.datastore:datastore-core:1.1.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.room:room-common:2.6.1")
-    implementation("com.google.ai.client.generativeai:generativeai:0.6.0")
-    //implementation("com.google.firebase:firebase-auth:22.3.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    implementation(libs.androidx.paging.compose.android)
+    debugImplementation(libs.compose.ui.tooling)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+    annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
 
+    // Navigation
+    implementation(libs.navigation.compose)
 
+    // Retrofit & Network
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp.logging)
+    implementation(libs.kotlinx.serialization.json)
 
-
-    // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    // Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
-
-
-    // Room components
-    implementation ("androidx.room:room-runtime:2.6.1")
-    kapt ("androidx.room:room-compiler:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
-    implementation ("androidx.room:room-paging:2.6.1")
-
-    // Paging 3.0
-    implementation ("androidx.paging:paging-compose:3.2.1")
-
-    // KotlinX Serialization
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
-
-     //Dagger - Hilt
-    implementation ("com.google.dagger:hilt-android:2.50")
-    implementation("androidx.hilt:hilt-work:1.1.0")
-    kapt ("com.google.dagger:hilt-android-compiler:2.50")
-    kapt ("androidx.hilt:hilt-compiler:1.1.0")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
-
-
-
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.work)
+    implementation(libs.work.runtime.ktx)
+    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.ext.compiler)
 
     // Firebase
-    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    // Accompanist
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+    implementation(libs.accompanist.swiperefresh)
+    implementation(libs.accompanist.systemuicontroller)
 
-    // DataStore Preferences
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // Others
+    implementation(libs.coil.compose)
+    implementation(libs.charty)
+    implementation(libs.health.connect)
+    implementation(libs.generative.ai)
+}
 
-    // Coil
-    implementation ("io.coil-kt:coil-compose:2.2.2")
-
-
-    // Horizontal Pager and Indicators - Accompanist
-    implementation ("com.google.accompanist:accompanist-pager:0.21.2-beta")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.21.2-beta")
-
-    // Swipe to Refresh - Accompanist
-    implementation ("com.google.accompanist:accompanist-swiperefresh:0.21.2-beta")
-
-    // System UI Controller - Accompanist
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.21.2-beta")
-
-    // Chart
-    implementation("com.himanshoe:charty:2.0.0-alpha01")
-
-
-    // Insets - Accompanist
-    implementation ("com.google.accompanist:accompanist-insets:0.28.0")
-
-//    // MPAndroidChart
-//    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
-
-
-
+kapt {
+    correctErrorTypes = true
 }
