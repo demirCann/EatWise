@@ -1,12 +1,10 @@
 package com.demircandemir.relaysample.data.remote
 
-import com.demircandemir.relaysample.domain.model.MealInfo
+import com.demircandemir.relaysample.domain.model.MealListResponse
 import com.demircandemir.relaysample.domain.model.MealResponse
+import com.demircandemir.relaysample.domain.model.MealsForDietPlan
 import com.demircandemir.relaysample.domain.model.MealsRequest
-import com.demircandemir.relaysample.domain.model.MealsResponse
 import com.demircandemir.relaysample.domain.model.UserInfo
-import com.demircandemir.relaysample.domain.model.UserResponse
-import kotlinx.serialization.Serializable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -21,11 +19,12 @@ import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface EatWiseApi {
+
     @GET("/users/")
     suspend fun getUserInfo(
         @Query("user_id") id: Int = 1,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
-    ): UserInfo
+    ): Response<UserInfo>
 
     @Headers("Content-Type: application/json")
     @POST("/users/")
@@ -45,35 +44,24 @@ interface EatWiseApi {
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
     ): Response<ResponseBody>
 
-//    @PUT("/diet_plan/")
-//    suspend fun updateDietPlan(
-//        @Query("user_id") userId: Int,
-//        @Query("repast") repast: String,
-//        @Body mealsRequest: MealsRequest
-//    ): Response<ResponseBody>
-
     @GET("/meals/page/")
     suspend fun getAllMeals(
         @Query("page") page: Int = 1,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
-    ): MealsResponse
-
-
-
+    ): Response<MealListResponse>
 
     @GET("/meals/repast/")
     suspend fun getMealsForSelection(
         @Query("repast") repast: String = "Breakfast",
         @Query("page") page: Int = 1,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
-    ): MealsResponse
+    ): Response<MealListResponse>
 
     @GET("/meals/")
     suspend fun getSelectedMeal(
         @Query("meal_id") id: Int,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
-    ): MealResponse
-
+    ): Response<MealResponse>
 
     @PUT("/diet_plan/")
     suspend fun updateDietPlan(
@@ -83,27 +71,18 @@ interface EatWiseApi {
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
     ): Response<ResponseBody>
 
-
-
     @GET("/diet_plan/")
     suspend fun getDietPlan(
         @Query("user_id") userId: Int = 1,
         @Query("repast") repast: String,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
-    ): MealsResponse2
-
-
-
+    ): Response<MealsForDietPlan>
 
     @GET("/meals/search/")
     suspend fun searchMeals(
         @Query("meal_name") name: String,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
-    ): MealsResponse
-
-
-
-
+    ): Response<MealListResponse>
 
     @POST("diet_plan/")
     fun postDietPlan(
@@ -112,15 +91,4 @@ interface EatWiseApi {
         @Query("meals") meals: String,
         @Query("api_key") apiKey: String = "650d30e3c8d88e5a6e38c2db3425406c7800944e",
     ): Call<ResponseBody>
-
-
-
-
-
 }
-
-
-@Serializable
-data class MealsResponse2(
-    val meals: List<MealInfo>
-)

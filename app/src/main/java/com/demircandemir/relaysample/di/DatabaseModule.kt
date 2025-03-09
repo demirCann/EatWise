@@ -3,8 +3,8 @@ package com.demircandemir.relaysample.di
 import android.content.Context
 import androidx.room.Room
 import com.demircandemir.relaysample.data.local.EatWiseDatabase
-import com.demircandemir.relaysample.data.repository.LocalDataSourceImpl
-import com.demircandemir.relaysample.domain.repositories.LocalDataSource
+import com.demircandemir.relaysample.data.datasource.local.LocalDataSourceImpl
+import com.demircandemir.relaysample.data.datasource.local.LocalDataSource
 import com.demircandemir.relaysample.util.Constants.EAT_WISE_DATABASE_NAME
 import dagger.Module
 import dagger.Provides

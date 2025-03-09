@@ -1,16 +1,14 @@
 package com.demircandemir.relaysample.di
 
-import com.demircandemir.relaysample.data.local.EatWiseDatabase
 import com.demircandemir.relaysample.data.remote.EatWiseApi
-import com.demircandemir.relaysample.data.repository.RemoteDataSourceImpl
-import com.demircandemir.relaysample.domain.repositories.RemoteDataSource
+import com.demircandemir.relaysample.data.datasource.remote.RemoteDataSourceImpl
+import com.demircandemir.relaysample.data.datasource.remote.RemoteDataSource
 import com.demircandemir.relaysample.util.Constants.BASE_URL
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -19,14 +17,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-
-
-
 
     @Singleton
     @Provides
@@ -38,8 +31,6 @@ object NetworkModule {
             .build()
     }
 
-
-    @OptIn(ExperimentalSerializationApi::class)
     @Singleton
     @Provides
     @MainRetrofit
@@ -56,7 +47,6 @@ object NetworkModule {
             .build()
     }
 
-
     @Provides
     @Singleton
     fun provideUserApi(@MainRetrofit retrofit: Retrofit): EatWiseApi {
@@ -66,17 +56,13 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRemoteDataSource(
-        eatWiseApi: EatWiseApi,
-        eatWiseDatabase: EatWiseDatabase
+        eatWiseApi: EatWiseApi
     ): RemoteDataSource {
         return RemoteDataSourceImpl(
-            eatWiseApi = eatWiseApi,
-            eatWiseDatabase = eatWiseDatabase
+            eatWiseApi = eatWiseApi
         )
     }
-
 }
-
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

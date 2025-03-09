@@ -10,7 +10,7 @@ data class UserResponse(
 )
 
 @Serializable
-data class MealsResponse(
+data class MealListResponse(
     val success: Boolean,
     val message: String? = null,
     val prevPage: Int? = null,
@@ -23,5 +23,5 @@ data class MealsResponse(
 data class MealResponse(
     val success: Boolean,
     val message: String? = null,
-    val meal: MealInfo
+    val meals: MealInfo
 )
