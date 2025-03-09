@@ -1,12 +1,9 @@
 package com.demircandemir.relaysample.util
 
 object Constants {
-
-
     const val BASE_URL = "https://eatwise-148a03647111.herokuapp.com/"
 
-    const val MEAL_NUMBER_PER_PAGE = 10
-
+    const val MEAL_ITEMS_PER_PAGE = 10
 
     const val EAT_WISE_DATABASE_NAME = "eat_wise_database"
     const val MEAL_DATABASE = "meal_table"
