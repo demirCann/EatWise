@@ -11,7 +11,6 @@ import com.demircandemir.relaysample.navigation.Screens
 import com.demircandemir.relaysample.presentation.screens.meals.MealsTopBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SnacksMealsScreen(
     navController: NavHostController
@@ -26,7 +25,5 @@ fun SnacksMealsScreen(
                 }
             )
         }
-    ) {
-
-    }
+    ) {}
 }

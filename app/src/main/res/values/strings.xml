@@ -82,4 +82,6 @@
     <string name="kcal">%1$s kcal</string>
     <string name="finish_cooking">Finish Cooking</string>
     <string name="try_again">Try Again</string>
+    <string name="meals">Meals</string>
+    <string name="add_button">Add Button</string>
 </resources>

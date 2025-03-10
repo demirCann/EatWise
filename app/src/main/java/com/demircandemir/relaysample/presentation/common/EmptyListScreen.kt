@@ -9,12 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,7 +38,7 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
-fun EmptyScreen(
+fun EmptyListScreen(
     error: LoadState.Error? = null,
     meals: LazyPagingItems<MealInfo>? = null,
 ) {
@@ -48,7 +47,7 @@ fun EmptyScreen(
     }
 
     var icon by remember {
-        mutableStateOf(R.drawable.search_document)
+        mutableIntStateOf(R.drawable.search_document)
     }
 
     if (error != null) {
@@ -79,7 +78,7 @@ fun EmptyScreen(
             Icon(
                 modifier = Modifier
                     .size(120.dp)
-                    .alpha(alpha = ContentAlpha.disabled),
+                    .alpha(alpha = 0f),
                 painter = painterResource(id = icon),
                 contentDescription = stringResource(R.string.error_icon),
                 tint = if(isSystemInDarkTheme()) LightGray else DarkGray
@@ -87,17 +86,16 @@ fun EmptyScreen(
             Text(
                 modifier = Modifier
                     .padding(top = 10.dp)
-                    .alpha(ContentAlpha.disabled),
+                    .alpha(alpha = 0f),
                 text = message,
                 color = if (isSystemInDarkTheme()) LightGray else DarkGray,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium,
-                fontSize = MaterialTheme.typography.subtitle1.fontSize
+                fontSize = MaterialTheme.typography.titleSmall.fontSize
             )
         }
     }
 }
-
 
 fun parseErrorMessage(error: LoadState.Error): String {
     return when (error.error) {
@@ -108,18 +106,14 @@ fun parseErrorMessage(error: LoadState.Error): String {
     }
 }
 
-
-
 @Composable
 @Preview(showBackground = true)
 fun EmptyScreenPreview() {
-    EmptyScreen(error = LoadState.Error(SocketTimeoutException()))
+    EmptyListScreen(error = LoadState.Error(SocketTimeoutException()))
 }
 
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun EmptyScreenDarkPreview() {
-    EmptyScreen(error = LoadState.Error(SocketTimeoutException()))
+    EmptyListScreen(error = LoadState.Error(SocketTimeoutException()))
 }
-
-

@@ -18,14 +18,11 @@ class MealsViewModel @Inject constructor(
     private val useCases: UseCases
 ) : ViewModel() {
 
-
-
     private val _allMeals = MutableStateFlow<PagingData<MealInfo>>(PagingData.empty())
     val allMeals = _allMeals.asStateFlow()
 
     init {
         getAllMeals()
-
     }
 
     private fun getAllMeals() {

@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.demircandemir.relaysample.R
 import com.demircandemir.relaysample.navigation.Screens
 import com.demircandemir.relaysample.presentation.common.ListContent
 
@@ -29,7 +31,7 @@ fun MealsScreen(
     Scaffold(
         topBar = {
             MealsTopBar(
-                topBarName = "Meals",
+                topBarName = stringResource(R.string.meals),
                 onSearchClicked = { navController.navigate(Screens.Search.route) },
                 onBackClicked = {}
             )
@@ -58,8 +60,6 @@ fun MealsScreen(
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewRecipeScreen() {
@@ -67,5 +67,3 @@ fun PreviewRecipeScreen() {
         navController = rememberNavController()
     )
 }
-
-
