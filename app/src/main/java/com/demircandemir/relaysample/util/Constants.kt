@@ -20,6 +20,9 @@ object Constants {
     const val GEMINI_PRO = "gemini-pro"
     const val GEMINI_API_KEY = "AIzaSyB-jQQfGJBtdejHm2I6bEZaNcWw96fMZgI"
 
+    // OPENAI API
+    const val OPENAI_API_KEY = "sk-proj-5WEuAWtDaeajemwfu71uT3BlbkFJJK1xri6HGDnUDdUq5w7I"
+
     // AI Prompts
     const val AI_SYSTEM_PROMPT = "Sen bir yemek uzmanısın. Sadece yemek tarifleri, malzemeler, besin değerleri ve yemekle ilgili diğer konular hakkında cevap ver. Başka konularla ilgili sorulara yanıt verme."
     const val AI_DEFAULT_IMAGE_PROMPT = "Analyze this image"
